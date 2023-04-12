@@ -94,6 +94,11 @@ public:
     UIproperties UIprop;
     bool imported = false;
     uint* modelcounterptr;
+    vec3<double> originpoint;
+
+    glm::vec3 dynamic_origin;
+
+    bool gizmo_first_time = true;
 
     
     
@@ -169,7 +174,52 @@ private:
             cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
             return;
         }
+<<<<<<< Updated upstream
         
+=======
+
+
+        std::vector<glm::vec3> originPoints;
+        for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
+            aiMesh* mesh = scene->mMeshes[i];
+
+            float minX = mesh->mVertices[0].x, minY = mesh->mVertices[0].y, minZ = mesh->mVertices[0].z;
+            float maxX = mesh->mVertices[0].x, maxY = mesh->mVertices[0].y, maxZ = mesh->mVertices[0].z;
+            for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+                if (mesh->mVertices[j].x < minX) minX = mesh->mVertices[j].x;
+                if (mesh->mVertices[j].y < minY) minY = mesh->mVertices[j].y;
+                if (mesh->mVertices[j].z < minZ) minZ = mesh->mVertices[j].z;
+                if (mesh->mVertices[j].x > maxX) maxX = mesh->mVertices[j].x;
+                if (mesh->mVertices[j].y > maxY) maxY = mesh->mVertices[j].y;
+                if (mesh->mVertices[j].z > maxZ) maxZ = mesh->mVertices[j].z;
+            }
+            float centerX = (minX + maxX) / 2.0f;
+            float centerY = (minY + maxY) / 2.0f;
+            float centerZ = (minZ + maxZ) / 2.0f;
+
+            originPoints.push_back(glm::vec3(centerX, centerY, centerZ));
+        }
+
+        // Compute overall origin point
+        float overallCenterX = 0.0f, overallCenterY = 0.0f, overallCenterZ = 0.0f;
+        for (unsigned int i = 0; i < originPoints.size(); i++) {
+            overallCenterX += originPoints[i].x;
+            overallCenterY += originPoints[i].y;
+            overallCenterZ += originPoints[i].z;
+        }
+        overallCenterX /= originPoints.size();
+        overallCenterY /= originPoints.size();
+        overallCenterZ /= originPoints.size();
+
+        originpoint = { overallCenterX,overallCenterY,overallCenterZ };
+
+        dynamic_origin = glm::vec3(overallCenterX, overallCenterY, overallCenterZ);
+
+        std::cout << "Overall origin point: (" << overallCenterX << ", " << overallCenterY << ", " << overallCenterZ << ")" << std::endl;
+
+        
+        // retrieve the directory path of the filepath
+>>>>>>> Stashed changes
         directory = path.substr(0, path.find_last_of('/'));
 
         

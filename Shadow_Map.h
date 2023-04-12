@@ -71,14 +71,26 @@
 		 
 
 		  glm::mat4 lightprojection = glm::mat4(1.0f);
-		  glm::mat4 orthgonalProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -20.0f, 20.0f);
+		  glm::mat4 orthgonalProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -scene_scale , scene_scale );
 		  int height = NULL, width = NULL;
 		  glfwGetWindowSize(window, &width, &height);
 
 		  float total_scale = NULL;
 
+		  glm::vec3 average_origin_point(NULL);
+
+		  for (size_t i = 0; i < models.size(); i++)
+		  {
+			  average_origin_point += models.at(i)->dynamic_origin;
+		  }
+
+		  average_origin_point = average_origin_point / (float)models.size();
+
 		  glm::mat4 scale = glm::mat4(1.0f);
 		  scale = glm::scale(scale,glm::vec3(200.0f / scene_scale , 200.0f / scene_scale, 200.0f / scene_scale));
+
+		  glm::mat4 translation = glm::mat4(1.0f);
+		  translation = glm::translate(translation, -average_origin_point / 30.0f);
 
 		  //glm::mat4 orthgonalProjection = glm::perspective(glm::radians(45.0f), (float)(width/ height), 0.1f, 100.0f);
 		  glm::mat4 lightView = glm::lookAt(lightposition, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -86,7 +98,11 @@
 
 		  
 
-		  lightprojection = scale * orthgonalProjection * lightView;
+		  lightprojection =  scale * orthgonalProjection * lightView;
+
+		  
+		  //translation = glm::translate(translation, -(average_origin_point / 10.0f));
+
 
 		  lp = lightprojection;
 

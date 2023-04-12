@@ -41,6 +41,11 @@
 
 	  void HandleInputs(GLFWwindow* window, vec2<int> menu_size);
 
+	  glm::vec3 Get_Position() { return Position; };
+
+	  glm::vec3 Get_Orientation() { return Orientation; };
+
+
   };
 
 

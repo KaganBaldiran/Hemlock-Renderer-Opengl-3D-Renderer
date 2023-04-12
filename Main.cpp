@@ -67,9 +67,12 @@ int main()
     glUniform4f(glGetUniformLocation(defaultshader.GetID(), "colorpr"), 1.0f, 0.0f, 0.0f, 1.0f);
 
     Meshs grid = scene.SetGrid(pickingshader.GetID());
-    Meshs cursor = scene.SetCursorObject(pickingshader.GetID());
+    
 
-    //Model gizmo_arrow("C:/Users/kbald/Desktop/gizmo_arrow.obj",defaultshader.GetID());
+    
+    scene.ImportModel("C:/Users/kbald/Desktop/gizmo_arrow.obj", lightshader.GetID());
+
+   
 
 
     std::vector<std::pair<Textures*, uint>> textures_imported;
@@ -124,12 +127,18 @@ int main()
     pickingtex.Init(windowwidth, windowheight);
 
 
-    Camera camera(windowwidth, windowheight, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(windowwidth, windowheight, glm::vec3(0.0f, 0.3f, 2.0f));
 
     int selection = NULL;
     int index = NULL;
     int currentselectedobj = NULL;
     int currentselectedlight = NULL;
+    int currentselectedgizmo = NULL;
+
+    vec2<double> PrevMousePos = { NULL,NULL };
+
+    std::pair<uint, bool>enablegizmo_p = { NULL , false };
+    bool enablegizmo = false;
 
     bool allowclick = true;
     //bool enablehighlight = false;
@@ -178,7 +187,9 @@ int main()
 	{
        
         
-        WindowSizeRecall(window,UI::current_win_size);
+        WindowSizeRecall(window,UI::current_viewport_size);
+
+        UI::FindCurrentViewportSize(window);
         
        // glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
@@ -191,7 +202,7 @@ int main()
 
         camera.HandleInputs(window, UI::current_win_size);
 
-        camera.updateMatrix(45.0f, 0.1f, 100.0f, window,UI::current_win_size);
+        camera.updateMatrix(45.0f, 0.1f, 100.0f, window,UI::current_viewport_size);
 
         
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
@@ -223,7 +234,7 @@ int main()
         std::cout << "CURRENT SELECTED OBJECT: " << currentselectedobj << "\n";
        
 
-        UI::ConfigureUI(currentselectedobj, data, scene, logs, defaultshader.GetID(), lightcolor, lightpos,window,auto_rotate_on , ShadowMap.GetShadowMapImage());
+        UI::ConfigureUI(currentselectedobj, data, scene, logs, defaultshader.GetID(), lightcolor, lightpos,window,auto_rotate_on , ShadowMap.GetShadowMapImage(),lightshader.GetID());
 
         //UI::DemoUI(window);
 
@@ -325,6 +336,8 @@ int main()
            
         }
 
+        
+        vec2<double> temp_mouse_pos = scene.UseGizmo(window, currentselectedgizmo, currentselectedobj, enablegizmo_p, PrevMousePos,camera);
 
 
 		if (currentselectedobj >= 2)
@@ -333,6 +346,21 @@ int main()
 
 			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
 
+            scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin += glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
+
+
+            if (data.scaleamount != 0.0f)
+            {
+                scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
+
+                scene.RecalculateObjectScales(currentselectedobj, glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
+
+            }
+
+
+            scene.GetModel(currentselectedobj - 2)->transformation.rotate(data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+
 
 
 			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -340,19 +368,10 @@ int main()
 
 
 
-			if (data.scaleamount != 0.0f)
-			{
-				scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
-
-                scene.RecalculateObjectScales(currentselectedobj, glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
-
-			}
+			
 
 
-			scene.GetModel(currentselectedobj - 2)->transformation.rotate(data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-
-
+			
 
 
 			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
@@ -389,7 +408,10 @@ int main()
 
         glBindFramebuffer(GL_FRAMEBUFFER, *screen_fbo.GetFBO());
 
-        WindowSizeRecall(window,UI::current_win_size);
+        std::cout << "Current viewport size X: " << UI::current_viewport_size.x << "Current viewport size Y: " << UI::current_viewport_size.y << "\n";
+
+
+        WindowSizeRecall(window,UI::current_viewport_size);
 
         
 
@@ -434,7 +456,7 @@ int main()
 
                 
             }
-            if (i >= 1)
+            if (i > 1)
             {
                 
 				ShadowMap.LightProjection(lightpos, defaultshader.GetID(), window, scene.models, scene.globalscale);
@@ -445,6 +467,7 @@ int main()
 				scene.GetModel(i - 1)->transformation.SendUniformToShader(defaultshader.GetID(), "model");
 				scene.DrawModels(defaultshader.GetID(), camera, i - 1, ShadowMap.GetShadowMapImage());
 
+                
 				glActiveTexture(GL_TEXTURE0);
 
 				UseShaderProgram(0);
@@ -463,14 +486,28 @@ int main()
 
             }
         }
-        for (int i = 0; i < 1; i++) 
+        if (CURRENT_OBJECT(currentselectedobj) >= NULL)
         {
-            glStencilFunc(GL_ALWAYS, i + 1 + scene.GetModelCount() + 1 + scene.lights.size(), -1);
+            glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+            glStencilMask(0xFF);
+            glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-            //scene.DrawGizmo(defaultshader.GetID(), gizmo_arrow, camera,ShadowMap.GetShadowMapImage());
+            for (int i = 0; i < 3; i++)
+            {
+                glStencilFunc(GL_ALWAYS, i + 1 + scene.GetModelCount() + 1 + scene.lights.size() + 2, -1);
+
+                scene.DrawGizmo(lightshader.GetID(), camera, i,currentselectedobj,enablegizmo_p);
+
+            }
+
+            glDepthFunc(GL_LESS);
+            glStencilMask(0xFF);
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
+            glEnable(GL_DEPTH_TEST);
         }
+        
 
-
+        
 
         //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -534,18 +571,27 @@ int main()
             {
                 currentselectedobj = index;
                 currentselectedlight = NULL;
+                currentselectedgizmo = NULL;
             }
-            else if(index - 1 >= scene.GetModelCount())
+            else if(index - 1 >= scene.GetModelCount() && index -1 <= scene.GetModelCount()+scene.lights.size())
             {
                 currentselectedlight = index;
                 currentselectedobj = NULL;
-
+                currentselectedgizmo = NULL;
 
             }
+            if(index - 1 >= scene.GetModelCount() + scene.lights.size())
+            {
+                currentselectedlight = NULL;
+                currentselectedobj = NULL;
+                currentselectedgizmo = index;
+
+            }
+            
 
             std::cout << "Current selected light: " << currentselectedlight << "\n";
             std::cout << "Current selected obj: " << currentselectedobj << "\n";
-
+            
 
             
             if (currentselectedobj >= 2)
@@ -555,17 +601,24 @@ int main()
 
         }
 
-       /* vec2<double> mousepos;
-        glfwGetCursorPos(window, &mousepos.x, &mousepos.y);
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        {
 
-        vec2<double> virtual_mouse_pos;
+            vec2<double> mp = UI::CalculateVirtualMouse(window);
 
-        virtual_mouse_pos.x = (mousepos.x - UI::current_win_size.x ) / UI::image_ratio_divisor;
-        virtual_mouse_pos.y = (mousepos.y + 75 ) / UI::image_ratio_divisor  - 100;
+            index = pickingtex.onMouse(mp.x, mp.y, { windowwidth,windowheight });
 
-        std::cout << "VIRTUAL MOUSE POS X: " << virtual_mouse_pos.x << "VIRTUAL MOUSE POS Y: " << virtual_mouse_pos.y << "\n";
-        */
+            if (index - 1 >= scene.GetModelCount() + scene.lights.size())
+            {
+                currentselectedlight = NULL;
+                //currentselectedobj = NULL;
+                currentselectedgizmo = index;
 
+            }
+
+        }
+
+      
         UI::CalculateVirtualMouse(window);
 
 
@@ -574,6 +627,8 @@ int main()
         UI::DrawFrameBuffer(*screen_fbo.GetScreenImage(), window);
 
         std::cout << "Current selected light: " << currentselectedlight << "\n";
+        std::cout << "Current selected gizmo: " << currentselectedgizmo << "\n";
+        std::cout << "INDEX: " << index << "\n";
        
         //scene.DrawScreenQuad(FrameBufferShader.GetID(), ShadowMap.GetShadowMapImage());
         //scene.DrawCursor(cursor, pickingshader.GetID(), camera);
@@ -598,16 +653,20 @@ int main()
 
 
 
+            scene.GetModel(currentselectedobj - 2)->transformation.rotate(-data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+            scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
+
+
 			scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(1 / data.scaleamount, 1 / data.scaleamount, 1 / data.scaleamount));
 
 
-			scene.GetModel(currentselectedobj - 2)->transformation.rotate(-data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
-
+			
 
 
 			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
+
+            scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin -= glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
 
 
 
@@ -627,7 +686,9 @@ int main()
 			}
 		}
         
-		// }
+		
+
+        PrevMousePos = temp_mouse_pos;
         
 	}
 
@@ -654,6 +715,8 @@ int main()
         }
 
     }
+
+   // delete gizmo_arrow;
 
     UI::EndUI();
 

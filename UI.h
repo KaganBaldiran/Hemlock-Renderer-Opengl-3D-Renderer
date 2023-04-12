@@ -20,6 +20,7 @@ namespace UI
 
 
 	vec2<int> current_win_size = { (1000/5.4f),1000-18 };
+	vec2<int> current_viewport_size;
 	vec2<float> viewport_size;
 	float image_ratio_divisor = NULL;
 
@@ -27,7 +28,7 @@ namespace UI
     struct UIdataPack
     {
         bool renderlights = false;
-        ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 0.00f);
+        ImVec4 clear_color = ImVec4(0.041f, 0.041f, 0.044f, 0.00f);
 
         bool autorotate = false;
         float rotationamount = NULL;
@@ -180,6 +181,15 @@ namespace UI
 
     }
 
+	void FindCurrentViewportSize(GLFWwindow* window)
+	{
+		int height = NULL, width = NULL;
+		glfwGetWindowSize(window, &width, &height);
+
+		current_viewport_size = { width - current_win_size.x , current_win_size.y};
+
+	}
+
 	vec2<double> CalculateVirtualMouse(GLFWwindow* window)
 	{
 		vec2<double> mousepos;
@@ -188,19 +198,17 @@ namespace UI
 		vec2<double> virtual_mouse_pos;
 
 		virtual_mouse_pos.x = (mousepos.x ) - current_win_size.x;
-		virtual_mouse_pos.y = (mousepos.y + 75) / UI::image_ratio_divisor - 100;
+		virtual_mouse_pos.y = (mousepos.y - 37);
 
+		std::cout << "VIRTUAL MOUSE POS X: " << virtual_mouse_pos.x << "VIRTUAL MOUSE POS Y: " << mousepos.y << "\n";
+
+		int height = NULL, width = NULL;
+		glfwGetWindowSize(window, &width, &height);
 		
-		vec2<double> ratio = { (virtual_mouse_pos.x / ((1920 / image_ratio_divisor) - current_win_size.x)) ,  mousepos.y / 1080 };
 
-		mousepos = { mousepos.x * ratio.x, mousepos.y * (virtual_mouse_pos.y / ((1000 - 175) / image_ratio_divisor)) };
+		mousepos = { (current_viewport_size.x *virtual_mouse_pos.x) / current_viewport_size.x, (current_viewport_size.y * virtual_mouse_pos.y) / current_viewport_size.y};
 
-		//mousepos = {virtual_mouse_pos.x * (virtual_mouse_pos.x / 1920), mousepos.y * (virtual_mouse_pos.y / ((1000 - 175) / image_ratio_divisor)) };
-
-
-		std::cout << "RATIO X: " << ratio.x << "RATIO Y: " << ratio.y << "\n";
-
-		std::cout << "VIRTUAL MOUSE POS X: " << mousepos.x << "VIRTUAL MOUSE POS Y: " << mousepos.y << "\n";
+		std::cout << "MOUSE POS X: " << mousepos.x << "MOUSE POS Y: " << mousepos.y << "\n";
 
 
 		return mousepos;
@@ -210,35 +218,32 @@ namespace UI
 	void DrawFrameBuffer(GLuint screen_image , GLFWwindow* window)
 	{
 
+		static float max_viewport_size_y = -std::numeric_limits<float>::infinity();
+
 		vec2<int> winsize;
 
 		glfwGetWindowSize(window, &winsize.x, &winsize.y);
+
+		max_viewport_size_y = std::max(max_viewport_size_y, (float)current_viewport_size.y);
 
 
 		ImGui::SetNextWindowPos(ImVec2(current_win_size.x, 18));
 		ImGui::SetNextWindowSize(ImVec2(winsize.x - current_win_size.x, current_win_size.y));
 
 
-		ImGui::Begin("Viewport", (bool*)0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+		ImGui::Begin("Viewport", (bool*)0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+		
 		image_ratio_divisor = 1.1f;
 
-		viewport_size = { 1920 / image_ratio_divisor,1000 / image_ratio_divisor };
-
-
-
-		vec2<double> mousepos;
-
-		glfwGetCursorPos(window, &mousepos.x, &mousepos.y);
-
-		std::cout << "MOUSE POS X: " << mousepos.x << "MOUSE POS Y: " << mousepos.y << "\n";
-
+		viewport_size = { 1920/image_ratio_divisor ,1000/image_ratio_divisor};
 
 
 		float image_aspect_ratio = 1920.0f / 1000.0f;
+
 		
 
-		ImGui::SetCursorPos(ImVec2(0, 0));
+		ImGui::SetCursorPos(ImVec2(0, current_win_size.y - max_viewport_size_y ));
 
 		
 		ImVec2 uv0(0, 1); // Bottom-left corner of texture
@@ -246,7 +251,13 @@ namespace UI
 
 		
 	
-		ImGui::Image((void*)(intptr_t)screen_image, ImVec2(viewport_size.x, viewport_size.y), uv0, uv1);
+		//ImGui::Image((void*)(intptr_t)screen_image, ImVec2(viewport_size.x, viewport_size.y), uv0, uv1);
+		ImGui::Image((void*)(intptr_t)screen_image, ImVec2(1920, 1080), uv0, uv1);
+
+		
+		ImGui::SetCursorPos(ImVec2(winsize.x / 1.3f, winsize.y / 30.0f));
+
+		ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
 
 
 
@@ -254,7 +265,7 @@ namespace UI
 
 	}
 
-	void ConfigureUI(size_t currentselectedobj ,UIdataPack &data , scene &scene , std::vector<std::string>& logs ,GLuint import_shader , glm::vec4 lightcolor , glm::vec3 lightpos , GLFWwindow* window , std::vector<uint> &auto_rotate_on , GLuint screen_image)
+	void ConfigureUI(size_t currentselectedobj ,UIdataPack &data , scene &scene , std::vector<std::string>& logs ,GLuint import_shader , glm::vec4 lightcolor , glm::vec3 lightpos , GLFWwindow* window , std::vector<uint> &auto_rotate_on , GLuint screen_image,GLuint light_shader)
 	{
 
 		static bool importmodel_menu = false;
@@ -408,6 +419,33 @@ namespace UI
                 if (ImGui::MenuItem("Redo", "Ctrl+Y")) { /* Do something */ }
                 ImGui::EndMenu();
             }
+
+			if (ImGui::BeginMenu("Add"))
+			{
+				if (ImGui::BeginMenu("Lights"))
+				{
+
+					if (ImGui::MenuItem("Directional Light", "Ctrl+L+D"))
+					{
+						scene.Addlight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), light_shader, CUBE_LIGHT, DIRECTIONAL_LIGHT);
+						scene.handlelights(import_shader);
+					}
+					if (ImGui::MenuItem("Spot Light", "Ctrl+L+S"))
+					{
+						scene.Addlight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), light_shader, CUBE_LIGHT, SPOT_LIGHT);
+						scene.handlelights(import_shader);
+					}
+					if (ImGui::MenuItem("Point Light", "Ctrl+L+P"))
+					{
+						scene.Addlight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), light_shader, CUBE_LIGHT, POINT_LIGHT);
+						scene.handlelights(import_shader);
+					}
+
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenu();
+			}
 
             // Add additional menus here
 

@@ -96,8 +96,8 @@ vec2<float> GetScreenRatio(GLFWwindow* m_window , vec2<int> menu_size)
 
 	//std::cout << "WINSIZE.X: " << winsize.x << "WINSIZE.Y: " << winsize.y << "\n";
 
-	//winsize.x = winsize.x - menu_size.x;
-	//winsize.y = menu_size.y;
+	winsize.x = menu_size.x;
+	winsize.y = menu_size.y;
 
 	//std::cout << "WINSIZE.X: " << winsize.x << "WINSIZE.Y: " << winsize.y << "\n";
 

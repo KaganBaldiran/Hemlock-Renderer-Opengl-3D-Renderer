@@ -10,7 +10,8 @@ void WindowSizeRecall(GLFWwindow* window , vec2<int> menu_size)
 	int height = NULL, width = NULL;
 	glfwGetWindowSize(window, &width, &height);
 	//glViewport(menu_size.x,NULL , width, height);
-    glViewport(NULL, NULL, width, height);
+    //glViewport(NULL, NULL, width, height);
+    glViewport(NULL, NULL, menu_size.x, menu_size.y);
 }
 
 GLFWwindow* initializeWindow(int windowwidth , int windowheight , const char*windowname)

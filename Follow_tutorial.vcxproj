@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="post_process.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\..\..\..\Desktop\Projects\SDL2 PROJECTS\VS_sdl2_projects\2DRendererbyKB\2DRendererbyKB\stb_image.h" />
     <ClInclude Include="Buffers.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cubemap.h" />
     <ClInclude Include="post_process.h" />
     <ClInclude Include="Helper_classes.h" />
     <ClInclude Include="Imgui\imconfig.h" />
