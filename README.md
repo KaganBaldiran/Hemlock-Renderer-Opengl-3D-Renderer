@@ -2,4 +2,4 @@
 
 This is how it currently looks(Tank Model doesn't belong to me):
 
-![image](https://user-images.githubusercontent.com/80681941/229170268-265b8378-9c82-4be7-b836-3945c66bb4b8.png)
+![image](https://user-images.githubusercontent.com/80681941/231525145-6992ca75-1cd2-49dc-a33c-f6691cda7178.png)
