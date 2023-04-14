@@ -20,18 +20,23 @@
   uniform sampler2D texture_diffuse0;
   uniform sampler2D texture_specular0;
   uniform sampler2D texture_normal0;
+  uniform sampler2D texture_metalic0;
   uniform sampler2D texture_diffuse1;
   uniform sampler2D texture_specular1;
   uniform sampler2D texture_normal1;
+  uniform sampler2D texture_metalic1;
   uniform sampler2D texture_diffuse2;
   uniform sampler2D stexture_specular2;
   uniform sampler2D texture_normal2;
+  uniform sampler2D texture_metalic2;
   uniform sampler2D texture_diffuse3;
   uniform sampler2D texture_specular3;
   uniform sampler2D texture_normal3;
+  uniform sampler2D texture_metalic3;
   uniform sampler2D texture_diffuse4;
   uniform sampler2D texture_specular4;
   uniform sampler2D texture_normal4;
+  uniform sampler2D texture_metalic4;
   uniform sampler2D shadowMap;
 
 
@@ -52,10 +57,14 @@
   uniform bool enablehighlight;
 
 
-  uniform int disableclaymaterial[3];
+  uniform int disableclaymaterial[4];
 
 
   uniform vec3 campos;
+
+
+  uniform samplerCube skybox;
+  in vec3 inverse_normal;
 
 
   float near = 0.1;
@@ -154,7 +163,7 @@
   }
 
 
-  vec4 directionalLight(vec4 texturespecular , vec4 texturediffuse, vec3 lightpos , vec4 lightColor , vec3 inputnormal , bool blinn_phong)
+  vec4 directionalLight(vec4 texturespecular , vec4 texturediffuse , vec4 metalic_map , vec3 lightpos , vec4 lightColor , vec3 inputnormal , bool blinn_phong)
   {
   
      float ambient = 0.20f;
@@ -183,9 +192,23 @@
 
      
      float shadow = ShadowCalculation(FragPosLight,lightDirection,normal);
-     
 
-     return (texturediffuse * lightColor * ((diffuse * (1.0f - shadow)  + ambient) + texturespecular * specular * (1.0f - shadow) ));
+      vec3 I = normalize(currentpos - campos);
+      vec3 R = reflect(I, normalize(inverse_normal));
+      vec4 metalic = vec4(texture(skybox, R).rgb, 1.0) ;
+
+      if(metalic_map == vec4(0.0f,0.0f,0.0f,0.0f))
+      {
+          metalic = vec4(1.0f,1.0f,1.0f,1.0f);
+         
+      }
+
+      vec4 reversed_metalic_map = vec4(1.0f,1.0f,1.0f,1.0f) - metalic_map;
+
+     
+     //return (texturediffuse * lightColor * ((diffuse * (1.0f - shadow)  + ambient) + texturespecular * specular * (1.0f - shadow) ));
+     
+     return (((texturediffuse + (texturediffuse * metalic * metalic_map))) * lightColor * ((diffuse * (1.0f - shadow)  + ambient) + texturespecular * specular * (1.0f - shadow) ));
      
   }
 
@@ -303,6 +326,18 @@
          texturecolor = texture(texture_diffuse1, finaltextcoord);
 
      }
+
+     vec4 metalicmap;
+
+     if(disableclaymaterial[3] == 0)
+     {
+        metalicmap = vec4(0.0f,0.0f,0.0f,0.0f);
+     }
+     else
+     {
+         metalicmap = texture(texture_metalic1, finaltextcoord) * vec4(2.0f,2.0f,2.0f,2.0f);
+
+     }
      
       
      
@@ -320,7 +355,7 @@
        }     
        else if(typeoflight[i] == 200)
        {
-          endresult += directionalLight(inverted_rougness,texturecolor,lightpositions[i],lightColors[i] , resultnormal , true);
+          endresult += directionalLight(inverted_rougness,texturecolor,metalicmap,lightpositions[i],lightColors[i] , resultnormal , true);
        }
        else if(typeoflight[i] == 300)
        {
@@ -332,6 +367,10 @@
 
      //outColor = endresult * vec4(1.5f,1.5f,1.5f,1.5f);
        outColor = endresult ;
+
+     // vec3 I = normalize(currentpos - campos);
+      //vec3 R = reflect(I, normalize(inverse_normal));
+      //outColor = vec4(texture(skybox, R).rgb, 1.0) * inverted_rougness;
      
      
      if(enablehighlight)

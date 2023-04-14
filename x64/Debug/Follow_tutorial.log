@@ -1,2 +1,20 @@
-﻿  initialize.cpp
-  Follow_tutorial.vcxproj -> C:\Users\kbald\source\repos\Follow_tutorial\x64\Debug\Follow_tutorial.exe
+﻿  Camera.cpp
+  Cubemap.cpp
+  post_process.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  Main.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\filesystem(13): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Model.h(10,10): fatal  error C1083: Cannot open include file: 'assimp/Importer.hpp': No such file or directory
+  Mesh.cpp
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Mesh.cpp(74,62): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Mesh.cpp(90,64): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Model.cpp
+  nfd_win.cpp
+  PickingTexture.cpp
+  Generating Code...

@@ -183,6 +183,8 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CubeMap.frag" />
+    <None Include="CubeMap.vert" />
     <None Include="fragsource.frag" />
     <None Include="framebuffer.frag" />
     <None Include="framebuffer.vert" />

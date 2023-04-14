@@ -15,6 +15,7 @@
   out vec3 bitangent;
   out vec3 tangent;
   
+  out vec3 inverse_normal;
 
   out mat3 TBN;
 
@@ -48,6 +49,8 @@
 
     //Normal = aNormal;
     Normal = vec3(model * vec4(aNormal,0.0));
+
+    inverse_normal = mat3(transpose(inverse(model))) * aNormal;
 
 
     FragPosLight = lightProjection * vec4(currentpos , 1.0f);

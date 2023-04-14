@@ -1,6 +1,7 @@
-﻿  Generating code
-  Previous IPDB was built with incompatible compiler, fall back to full compilation.
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Shader.cpp(26): warning C4715: 'ReadTextFile': not all control paths return a value
-  All 2930 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+﻿  Camera.cpp
+  Generating code
+  2 of 2983 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    36 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Follow_tutorial.vcxproj -> C:\Users\kbald\source\repos\Follow_tutorial\x64\Release\Follow_tutorial.exe

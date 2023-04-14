@@ -57,6 +57,8 @@ namespace UI
 
         float degree = NULL;
 
+		bool render_cube_map = false;
+
     };
 
 	
@@ -589,7 +591,7 @@ namespace UI
 
 						static bool allow_import_texture = false;
 						nfdchar_t* texture_path = nullptr;
-						int Map_count = 3;
+						int Map_count = 4;
 
 
 
@@ -643,6 +645,14 @@ namespace UI
 									image_import_buttons.push_back(NORMAL_TEXTURE);
 									button_type = NORMAL_TEXTURE;
 									map_type_string = "texture_normal";
+
+								}
+								else if (s % Map_count == 3)
+								{
+									button_info = "Metalic Map";
+									image_import_buttons.push_back(METALIC_TEXTURE);
+									button_type = METALIC_TEXTURE;
+									map_type_string = "texture_metalic";
 
 								}
 
@@ -823,7 +833,7 @@ namespace UI
 					ImGui::BeginChildFrame(33, ImVec2(380, 150), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
 
 					//ImGui::SetCursorPos(ImVec2(10, 10));
-					ImGui::Checkbox("selection highlight", &data.enablehighlight);
+					ImGui::Checkbox(" Enable Skybox", &data.render_cube_map);
 					//ImGui::SetCursorPos(ImVec2(10, 40));
 					ImGui::ColorEdit3("Background color", (float*)&data.clear_color); // Edit 3 floats representing a color
 					//ImGui::SetCursorPos(ImVec2(10, 70));

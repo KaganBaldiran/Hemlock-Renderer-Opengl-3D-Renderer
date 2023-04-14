@@ -396,7 +396,7 @@ public:
 		for (size_t i = 1; i < models.size(); i++)
 		{
 			models.at(i)->transformation.SendUniformToShader(shadow_map_shader, "model");
-			models[i]->Draw(shadow_map_shader, camera, ShadowMap->GetShadowMapImage());
+			models[i]->Draw(shadow_map_shader, camera, ShadowMap->GetShadowMapImage(),NULL);
 		}
 
 
@@ -471,7 +471,7 @@ public:
 		glDisable(GL_DEPTH_TEST);
 
 		models[model_index_to_draw]->transformation.SendUniformToShader(shader1, "model");
-		models[model_index_to_draw]->Draw(shader1, camera, shadowMap);
+		models[model_index_to_draw]->Draw(shader1, camera, shadowMap,NULL);
 
 		//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		//glClear(GL_COLOR_BUFFER_BIT);
@@ -499,7 +499,7 @@ public:
 
 		//models[model_index_to_draw]->transformation.translate(-glm::vec3(0.0f, -0.5f, 0.0f));
 
-		models[model_index_to_draw]->Draw(shader2, camera, shadowMap);
+		models[model_index_to_draw]->Draw(shader2, camera, shadowMap,NULL);
 
 		UseShaderProgram(NULL);
 
@@ -512,10 +512,10 @@ public:
 		glEnable(GL_DEPTH_TEST);
 
 	}
-	void DrawModels(GLuint shader, Camera& camera, size_t model_index_to_draw, GLuint shadowMap)
+	void DrawModels(GLuint shader, Camera& camera, size_t model_index_to_draw, GLuint shadowMap , GLuint cube_map_texture)
 	{
 
-		models[model_index_to_draw]->Draw(shader, camera, shadowMap);
+		models[model_index_to_draw]->Draw(shader, camera, shadowMap,cube_map_texture);
 
 	}
 
@@ -691,7 +691,7 @@ public:
 			}
 
 			UseShaderProgram(0);
-			DrawModels(shader, camera, 0, NULL);
+			DrawModels(shader, camera, 0, NULL,NULL);
 
 		}
 		if (iterator == 1)
@@ -710,7 +710,7 @@ public:
 			}
 
 			UseShaderProgram(0);
-			DrawModels(shader, camera, 0, NULL);
+			DrawModels(shader, camera, 0, NULL,NULL);
 			GetModel(0)->transformation.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 		}
@@ -731,7 +731,7 @@ public:
 			}
 
 			UseShaderProgram(0);
-			DrawModels(shader, camera, 0, NULL);
+			DrawModels(shader, camera, 0, NULL,NULL);
 			GetModel(0)->transformation.rotate(-90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 			GetModel(0)->transformation.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 

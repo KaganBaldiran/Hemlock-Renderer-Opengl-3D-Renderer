@@ -13,6 +13,7 @@
 #define SPECULAR_TEXTURE 20
 #define NORMAL_TEXTURE 30
 #define HEIGHT_TEXTURE 40
+#define METALIC_TEXTURE 50
 
 
 struct Vertexs

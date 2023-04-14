@@ -197,5 +197,11 @@
     <None Include="framebuffer.frag">
       <Filter>shaders</Filter>
     </None>
+    <None Include="CubeMap.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="CubeMap.frag">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

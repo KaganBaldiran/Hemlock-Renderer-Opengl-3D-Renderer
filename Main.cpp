@@ -14,6 +14,7 @@
 #include "Scene.h"
 #include "PickingTexture.h"
 #include "post_process.h"
+#include "Cubemap.h"
 
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -22,6 +23,7 @@
 #include "Imgui/imgui_impl_opengl3.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "nativefiledialog-extended-master/src/include/nfd.h"
+
 
 #include"UI.h"
 
@@ -54,6 +56,18 @@ int main()
     FBO screen_fbo;
 
     CreateCustomFrameBuffer(&screen_fbo , 1920 , 1000);
+
+    vector<std::string> cube_map_faces
+    {
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\right.jpg",
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\left.jpg",
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\top.jpg",
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\bottom.jpg",
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\front.jpg",
+        "C:\\Users\\kbald\\source\\repos\\Follow_tutorial\\resources\\skybox\\back.jpg"
+    };
+
+    CubeMap Cubemap(cube_map_faces, "CubeMap.vert", "CubeMap.frag");
 
     // Enables Cull Facing
     //glEnable(GL_CULL_FACE);
@@ -172,7 +186,7 @@ int main()
 
     shadowmap ShadowMap(4096, 4096);
 
-    ShadowMap.LightProjection(lightpos,ShadowMapShader.GetID(),window,scene.models,scene.globalscale);
+    ShadowMap.LightProjection(lightpos,ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera, UI::current_viewport_size);
 
 
 
@@ -399,7 +413,7 @@ int main()
 
         
 
-        ShadowMap.LightProjection(lightpos, ShadowMapShader.GetID(),window,scene.models,scene.globalscale);
+        ShadowMap.LightProjection(lightpos, ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera,UI::current_viewport_size);
         
         
 
@@ -422,13 +436,16 @@ int main()
         glEnable(GL_STENCIL_TEST);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
+        
+
         if (currentselectedobj >= 2)
         {
             scene.DrawModelsWithOutline(defaultshader.GetID(), Outlineshader.GetID(), camera, currentselectedobj - 2, currentselectedobj,ShadowMap.GetShadowMapImage());
            
         }
 
-
+        
+        
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -442,7 +459,12 @@ int main()
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         }
-        
+
+        if (data.render_cube_map)
+        {
+            Cubemap.Draw(camera);
+        }
+       
         UseShaderProgram(defaultshader.GetID());
 
 
@@ -459,13 +481,13 @@ int main()
             if (i > 1)
             {
                 
-				ShadowMap.LightProjection(lightpos, defaultshader.GetID(), window, scene.models, scene.globalscale);
+				ShadowMap.LightProjection(lightpos, defaultshader.GetID(), window, scene.models, scene.globalscale,camera,UI::current_viewport_size);
 
 				glUniform1i(glGetUniformLocation(defaultshader.GetID(), "enablehighlight"), data.enablehighlight);
 
-
+                
 				scene.GetModel(i - 1)->transformation.SendUniformToShader(defaultshader.GetID(), "model");
-				scene.DrawModels(defaultshader.GetID(), camera, i - 1, ShadowMap.GetShadowMapImage());
+				scene.DrawModels(defaultshader.GetID(), camera, i - 1, ShadowMap.GetShadowMapImage(),Cubemap.GetCubeMapTexture());
 
                 
 				glActiveTexture(GL_TEXTURE0);

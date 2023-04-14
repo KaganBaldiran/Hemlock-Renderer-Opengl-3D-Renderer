@@ -11,6 +11,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+
 #include "Meshhhh.h"
 #include "Shader.h"
 
@@ -141,14 +142,14 @@ public:
     }
 
     
-    void Draw(GLuint shader , Camera& camera, GLuint shadowMap)
+    void Draw(GLuint shader , Camera& camera, GLuint shadowMap , GLuint cube_map_texture)
     {
         glUniform1i(glGetUniformLocation(shader, "modelID"), modelid);
         
         //std::cout << "Model ID " << modelid << "\n";
 
         for (unsigned int i = 0; i < meshes.size(); i++)
-            meshes[i].Draw(shader , camera,shadowMap);
+            meshes[i].Draw(shader , camera,shadowMap,cube_map_texture);
     }
 
 
@@ -174,9 +175,7 @@ private:
             cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
             return;
         }
-<<<<<<< Updated upstream
-        
-=======
+
 
 
         std::vector<glm::vec3> originPoints;
@@ -219,7 +218,7 @@ private:
 
         
         // retrieve the directory path of the filepath
->>>>>>> Stashed changes
+
         directory = path.substr(0, path.find_last_of('/'));
 
         

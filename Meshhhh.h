@@ -51,7 +51,7 @@ namespace newwww {
 
         std::string meshname = "";
 
-        int disableclaymaterial[3] = { 0,0,0 };
+        int disableclaymaterial[4] = { 0,0,0,0};
 
         unsigned int VAO;
 
@@ -80,7 +80,7 @@ namespace newwww {
         }
 
         // render the mesh
-        void Draw(GLuint shader, Camera& camera , GLuint shadowMap)
+        void Draw(GLuint shader, Camera& camera , GLuint shadowMap,GLuint cube_map_texture)
         {
 
             UseShaderProgram(shader);
@@ -89,6 +89,7 @@ namespace newwww {
             unsigned int specularNr = 1;
             unsigned int normalNr = 1;
             unsigned int heightNr = 1;
+            unsigned int metalicNr = 1;
 
             //std::cout << "Texture size: " << textures.size() << "\n";
             for (unsigned int i = 0; i < textures.size(); i++)
@@ -105,6 +106,10 @@ namespace newwww {
                     number = std::to_string(normalNr++); // transfer unsigned int to string
                 else if (name == "texture_height")
                     number = std::to_string(heightNr++); // transfer unsigned int to string
+                else if (name == "texture_metalic")
+                    number = std::to_string(metalicNr++); // transfer unsigned int to string
+
+
 
                 std::cout << "TEXTURE UNIFORM: " << (name + number).c_str() << "\n";
 
@@ -128,11 +133,16 @@ namespace newwww {
 
                     disableclaymaterial[2] = 1;
                 }
+                else if (std::strcmp((name + number).data(), "texture_metalic1") == 0)
+                {
+
+                    disableclaymaterial[3] = 1;
+                }
 
 
                 GLuint boolArrayLocation = glGetUniformLocation(shader, "disableclaymaterial");
 
-                glUniform1iv(boolArrayLocation, 3, disableclaymaterial);
+                glUniform1iv(boolArrayLocation, 4, disableclaymaterial);
 
                 //std::cout << "Texture Name: " << (name + number).c_str() << "\n";
 
@@ -155,6 +165,10 @@ namespace newwww {
 
             glUniform1i(glGetUniformLocation(shader, "shadowMap"), 7);
 
+            glActiveTexture(GL_TEXTURE0 + 10);
+
+            glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map_texture);
+            glUniform1i(glGetUniformLocation(shader, "skybox"), 10);
 
             // draw mesh
             glBindVertexArray(VAO);
@@ -166,7 +180,7 @@ namespace newwww {
             glActiveTexture(GL_TEXTURE0);
 
             
-            for (size_t h = 0; h < 3; h++)
+            for (size_t h = 0; h < 4; h++)
             {
                disableclaymaterial[h] = 0;
 
@@ -174,7 +188,7 @@ namespace newwww {
 
             GLuint boolArrayLocation = glGetUniformLocation(shader, "disableclaymaterial");
 
-            glUniform1iv(boolArrayLocation, 3, disableclaymaterial);
+            glUniform1iv(boolArrayLocation, 4, disableclaymaterial);
             
         }
 

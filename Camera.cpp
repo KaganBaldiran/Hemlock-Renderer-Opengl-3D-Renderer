@@ -16,6 +16,8 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane , GLFWwi
 
 	view = glm::lookAt(Position, Position + Orientation, Up);
 
+	this->cam_view = view;
+
 	int height = NULL, width = NULL;
 	glfwGetWindowSize(window, &width, &height);
 
@@ -30,6 +32,7 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane , GLFWwi
 
 	proj = glm::perspective(glm::radians(FOVdeg),aspect_rat , nearPlane, farPlane);
 
+	this->projection = proj;
 	//proj = glm::ortho(0, w_width, w_height, 0, 0, 100);
 
 	glm::mat4 screenratiodefault = glm::mat4(1.0f);
@@ -100,7 +103,7 @@ void Camera::HandleInputs(GLFWwindow* window, vec2<int> menu_size)
 	}
 
 
-	if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS))
+	if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	{
 		int height = NULL, width = NULL;
 		glfwGetWindowSize(window, &width, &height);
@@ -144,7 +147,7 @@ void Camera::HandleInputs(GLFWwindow* window, vec2<int> menu_size)
 		glfwSetCursorPos(window, (w_width / 2), (w_height / 2));
 	}
 
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_RELEASE)
 	{
 
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
