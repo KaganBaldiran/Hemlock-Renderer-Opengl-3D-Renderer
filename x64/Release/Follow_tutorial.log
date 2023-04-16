@@ -1,8 +1,8 @@
 ﻿  Main.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\filesystem(13): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(357,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(602,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(603,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(361,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(606,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(607,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(22,38): warning C4838: conversion from 'float' to 'T' requires a narrowing conversion
           with
           [
@@ -67,32 +67,32 @@ C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1205,88): warni
 C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1214,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1214,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1217,131): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(364,79): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(378,105): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(432,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(350,79): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(364,105): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(418,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=double
           ]
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(432,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(418,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=double
           ]
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(476,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(462,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=double
           ]
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(476,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(462,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=double
           ]
-C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(141,23): warning C4101: 'pickingteq': unreferenced local variable
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(144,23): warning C4101: 'pickingteq': unreferenced local variable
   Generating code
-  2 of 2978 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    36 functions had inline decision re-evaluated but remain unchanged
+  5 of 2978 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    98 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Follow_tutorial.vcxproj -> C:\Users\kbald\source\repos\Follow_tutorial\x64\Release\Follow_tutorial.exe

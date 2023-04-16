@@ -15,6 +15,7 @@
 #include "PickingTexture.h"
 #include "post_process.h"
 #include "Cubemap.h"
+#include "Entity.h"
 
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -26,6 +27,8 @@
 
 
 #include"UI.h"
+
+
 
 
 const int windowwidth = 1000;
@@ -190,8 +193,6 @@ int main()
     ShadowMap.LightProjection(lightpos,ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera, UI::current_viewport_size);
 
 
-
-
     scene.SetScreenQuads();
 
 
@@ -200,14 +201,11 @@ int main()
     
 	while (!glfwWindowShouldClose(window))
 	{
-       
-        
-        
+               
         WindowSizeRecall(window,UI::current_viewport_size);
 
         UI::FindCurrentViewportSize(window);
         
-       // glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 		glClearColor(data.clear_color.x, data.clear_color.y, data.clear_color.z, data.clear_color.w);
         glClearStencil(0); // this is the default value

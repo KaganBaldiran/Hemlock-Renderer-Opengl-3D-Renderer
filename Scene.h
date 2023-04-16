@@ -85,6 +85,8 @@ public:
 
 		UseShaderProgram(shader);
 
+		transformations.transformmatrix = lightmodel;
+
 		glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(lightmodel));
 		glUniform4f(glGetUniformLocation(shader, "lightColor"), light_color.x, light_color.y, light_color.z, light_color.w);
 
@@ -126,6 +128,8 @@ private:
 	glm::vec4 light_color;
 	glm::vec3 lightscale;
 	glm::mat4 lightmodel = glm::mat4(1.0f);
+	float originpoint;
+	worldtransform transformations;
 	//uint16 light_shape;
 
 };
