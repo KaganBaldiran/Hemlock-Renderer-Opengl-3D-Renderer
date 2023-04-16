@@ -193,17 +193,17 @@
      
      float shadow = ShadowCalculation(FragPosLight,lightDirection,normal);
 
-      vec3 I = normalize(currentpos - campos);
-      vec3 R = reflect(I, normalize(inverse_normal));
-      vec4 metalic = vec4(texture(skybox, R).rgb, 1.0) ;
+     vec3 I = normalize(currentpos - campos);
+     vec3 R = reflect(I, normalize(inverse_normal));
+     vec4 metalic = vec4(texture(skybox, R).rgb, 1.0) ;
 
-      if(metalic_map == vec4(0.0f,0.0f,0.0f,0.0f))
-      {
-          metalic = vec4(1.0f,1.0f,1.0f,1.0f);
+     if(metalic_map == vec4(0.0f,0.0f,0.0f,0.0f))
+     {
+         metalic = vec4(1.0f,1.0f,1.0f,1.0f);
          
-      }
+     }
 
-      vec4 reversed_metalic_map = vec4(1.0f,1.0f,1.0f,1.0f) - metalic_map;
+     vec4 reversed_metalic_map = vec4(1.0f,1.0f,1.0f,1.0f) - metalic_map;
 
      
      //return (texturediffuse * lightColor * ((diffuse * (1.0f - shadow)  + ambient) + texturespecular * specular * (1.0f - shadow) ));
@@ -304,7 +304,7 @@
      }
      else
      {
-        specularmap = texture(texture_specular1, finaltextcoord) * vec4(2.0f,2.0f,2.0f,2.0f);
+        specularmap = vec4(vec3(texture(texture_specular1, finaltextcoord).r),1.0) * vec4(2.0f,2.0f,2.0f,2.0f);
 
      }
 
@@ -335,7 +335,7 @@
      }
      else
      {
-         metalicmap = texture(texture_metalic1, finaltextcoord) * vec4(2.0f,2.0f,2.0f,2.0f);
+         metalicmap = vec4(vec3(texture(texture_metalic1, finaltextcoord).r),1.0);
 
      }
      
@@ -365,10 +365,12 @@
 
      //endresult += directionalLight(inverted_rougness,texturecolor,lightpositions[0],lightColors[0] , resultnormal , true);
 
-     //outColor = endresult * vec4(1.5f,1.5f,1.5f,1.5f);
-       outColor = endresult ;
+     outColor = endresult;
 
-     // vec3 I = normalize(currentpos - campos);
+       ///float gamma = 2.2;
+       //outColor.rgb = pow(endresult.rgb, vec3(1.0/gamma));
+       
+      //vec3 I = normalize(currentpos - campos);
       //vec3 R = reflect(I, normalize(inverse_normal));
       //outColor = vec4(texture(skybox, R).rgb, 1.0) * inverted_rougness;
      
@@ -379,9 +381,6 @@
      }
 
      
-
-     //outColor = endresult * vec4(1.5f,1.5f,1.5f,1.5f);
-    
      //outColor = DepthDemonstration();
      
         

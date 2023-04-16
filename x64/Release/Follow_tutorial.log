@@ -1,7 +1,98 @@
-﻿  Camera.cpp
+﻿  Main.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\filesystem(13): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(357,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(602,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Scene.h(603,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(22,38): warning C4838: conversion from 'float' to 'T' requires a narrowing conversion
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(22,38): warning C4244: 'initializing': conversion from 'float' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(177,40): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(180,76): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(180,57): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(182,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(232,50): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(233,83): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(233,45): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(634,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(634,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(636,101): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(650,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(650,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(653,130): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(661,131): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(697,68): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(903,109): warning C4267: 'argument': conversion from 'size_t' to 'GLenum', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(984,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(984,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(987,129): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(994,130): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1027,130): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1201,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1205,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1214,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1214,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\UI.h(1217,131): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(364,79): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(378,105): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(432,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(432,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(476,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(476,42): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\kbald\source\repos\Follow_tutorial\Follow_tutorial\Main.cpp(141,23): warning C4101: 'pickingteq': unreferenced local variable
   Generating code
-  2 of 2983 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
+  2 of 2978 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
     36 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Follow_tutorial.vcxproj -> C:\Users\kbald\source\repos\Follow_tutorial\x64\Release\Follow_tutorial.exe

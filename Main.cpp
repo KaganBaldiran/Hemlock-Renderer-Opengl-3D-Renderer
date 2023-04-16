@@ -69,6 +69,9 @@ int main()
 
     CubeMap Cubemap(cube_map_faces, "CubeMap.vert", "CubeMap.frag");
 
+
+    //glEnable(GL_FRAMEBUFFER_SRGB);
+
     // Enables Cull Facing
     //glEnable(GL_CULL_FACE);
     // Keeps front faces
@@ -89,8 +92,6 @@ int main()
    
 
 
-    std::vector<std::pair<Textures*, uint>> textures_imported;
-    
 
    
    
@@ -201,6 +202,7 @@ int main()
 	{
        
         
+        
         WindowSizeRecall(window,UI::current_viewport_size);
 
         UI::FindCurrentViewportSize(window);
@@ -218,31 +220,9 @@ int main()
 
         camera.updateMatrix(45.0f, 0.1f, 100.0f, window,UI::current_viewport_size);
 
-        
-        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-        {
-            if (data.moveamount.x == data.newtreshold.x)
-            {
-                data.maxmove.x = 2.0f * data.newtreshold.x;
-                data.newtreshold.x = data.maxmove.x;
-            }
-            if (data.moveamount.y == data.newtreshold.y)
-            {
-                data.maxmove.y = 2.0f * data.newtreshold.y;
-                data.newtreshold.y = data.maxmove.y;
-            }
-            if (data.moveamount.z == data.newtreshold.z)
-            {
-                data.maxmove.z = 2.0f * data.newtreshold.z;
-                data.newtreshold.z = data.maxmove.z;
-            }
-            if (data.scaleamount == data.maxscale)
-            {
-                data.maxscale = 2.0f * data.maxscale;
-                //maxscale = scaleamount;
-            }
-        }
-        
+       
+
+        UI::HandleSliderMaxValues(data, window);
       
 
         std::cout << "CURRENT SELECTED OBJECT: " << currentselectedobj << "\n";
@@ -252,167 +232,27 @@ int main()
 
         //UI::DemoUI(window);
 
-
-        if (glfwGetKey(window,GLFW_KEY_DELETE) == GLFW_PRESS && currentselectedobj >= 2)
-        {
-            uint* tempptr = scene.GetModel(scene.GetModelCount() - 1)->GetModelIDcounterptr();
-
-            *scene.GetModel(scene.GetModelCount() - 1)->GetModelIDcounterptr() -= 1;
-
-           scene.DeleteModel(currentselectedobj - 2);
-
-           if (scene.GetModelCount() >= 1)
-           {
-               for (size_t i = 0; i < scene.GetModelCount(); i++)
-               {
-                   if (scene.GetModel(i)->GetModelID() > 2 && scene.GetModel(currentselectedobj - 3)->GetModelID() != scene.GetModelCount() + 1)
-                   {
-                       *scene.GetModel(i)->GetModelIDptr() -= 1;
-                       
-                   }
-                  
-               }
-           }
-           
-           std::cout << "NEW MODEL ID COUNTER: " << *tempptr << "\n";
-
-           std::string logtemp = "A new object is deleted!";
-
-           logs.push_back(logtemp);
-           
-           currentselectedobj = 0;
-
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && currentselectedobj >= 2)
-        {
-            
-            static int counterf = NULL;
-
-            if (counterf < 1)
-            {
-
-                scene.CopyModel(currentselectedobj - 2);
-
-                scene.handlelights(defaultshader.GetID());
-
-                UseShaderProgram(defaultshader.GetID());
-
-                //glUniformMatrix4fv(glGetUniformLocation(defaultshader.GetID(), "model"), 1, GL_FALSE, glm::value_ptr(pyramidmodel));
-                glUniform4f(glGetUniformLocation(defaultshader.GetID(), "lightColor1"), lightcolor.x, lightcolor.y, lightcolor.z, lightcolor.w);
-                glUniform3f(glGetUniformLocation(defaultshader.GetID(), "lightpos1"), lightpos.x, lightpos.y, lightpos.z);
-
-                std::string logtemp = "A new object is duplicated!";
-
-                logs.push_back(logtemp);
-
-            }
-
-            
-            counterf++;
-        }
+        
+        scene.DeleteModelKeyboardAction(currentselectedobj, window, logs);
+        
+        scene.CopyModelKeyboardAction(currentselectedobj, defaultshader.GetID(), window, logs, lightcolor, lightpos);
         
         //if (selected_model != nullptr)
         //{
 
-		if (data.autorotate)
-		{
-			data.degree += 0.1f;
 
-			if (data.degree >= 360.0f)
-			{
-                data.degree = NULL;
-			}
-
-            data.rotationamount = data.degree;
-		}
-		if (!data.autorotate)
-		{
-            data.degree = data.rotationamount;
-		}
+        UI::IncrementRotationDegree(data);
 
 
-        for (size_t i = 0; i < auto_rotate_on.size();i++)
-        {
-            if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
-            {
-                scene.GetModel(auto_rotate_on.at(i))->UIprop.degree = scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount;
-
-                scene.GetModel(auto_rotate_on.at(i))->UIprop.degree += 0.1f;
-
-                if (scene.GetModel(auto_rotate_on.at(i))->UIprop.degree >= 360.0f)
-                {
-                    scene.GetModel(auto_rotate_on.at(i))->UIprop.degree = NULL;
-                }
-
-                scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount = scene.GetModel(auto_rotate_on.at(i))->UIprop.degree;
-            }
-           
-        }
-
-        
+      
         vec2<double> temp_mouse_pos = scene.UseGizmo(window, currentselectedgizmo, currentselectedobj, enablegizmo_p, PrevMousePos,camera);
 
+       
+        UI::DoUIobjectTransformations(currentselectedobj, scene, data);
 
-		if (currentselectedobj >= 2)
-		{
+        UI::HandleAutoRotation(currentselectedobj, scene, auto_rotate_on);
 
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
-
-            scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin += glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
-
-
-            if (data.scaleamount != 0.0f)
-            {
-                scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
-
-                scene.RecalculateObjectScales(currentselectedobj, glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
-
-            }
-
-
-            scene.GetModel(currentselectedobj - 2)->transformation.rotate(data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-
-
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
-
-
-
-			
-
-
-			
-
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
-
-
-		}
-        
-
-		for (size_t i = 0; i < auto_rotate_on.size(); i++)
-		{
-            if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
-            {
-                scene.GetModel(auto_rotate_on.at(i))->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
-                scene.GetModel(auto_rotate_on.at(i))->transformation.rotate(scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-                scene.GetModel(auto_rotate_on.at(i))->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
-
-            }
-
-		}
-            
-        
-        
-
-        
-
+       
         ShadowMap.LightProjection(lightpos, ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera,UI::current_viewport_size);
         
         
@@ -437,6 +277,7 @@ int main()
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
         
+        //glEnable(GL_FRAMEBUFFER_SRGB);
 
         if (currentselectedobj >= 2)
         {
@@ -566,21 +407,7 @@ int main()
 
             allowclick = false;
             //std::cout << "PRESSED!" << "\n";
-            vec2<double> mousepos;
-            glfwGetCursorPos(window, &mousepos.x, &mousepos.y);
-
-            vec2<double> virtual_mouse_pos;
-
-            virtual_mouse_pos.x = (mousepos.x - UI::current_win_size.x) / UI::image_ratio_divisor;
-            virtual_mouse_pos.y = (mousepos.y + 75) / UI::image_ratio_divisor - 100;
-
-            //std::cout << "VIRTUAL MOUSE POS X: " << virtual_mouse_pos.x << "VIRTUAL MOUSE POS Y: " << virtual_mouse_pos.y << "\n";
-
-
-            mousepos.x = virtual_mouse_pos.x;
-            mousepos.y = virtual_mouse_pos.y;
-
-
+            
             vec2<double> mp = UI::CalculateVirtualMouse(window);
 
 
@@ -643,6 +470,8 @@ int main()
       
         UI::CalculateVirtualMouse(window);
 
+        //glDisable(GL_FRAMEBUFFER_SRGB);
+
 
         glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
@@ -663,51 +492,9 @@ int main()
 		glfwPollEvents();
 
        
-        
-		// if (selected_model != nullptr)
-		// {
-		if (currentselectedobj >= 2)
-		{
-
-
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
-
-
-            scene.GetModel(currentselectedobj - 2)->transformation.rotate(-data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-            scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
-
-
-			scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(1 / data.scaleamount, 1 / data.scaleamount, 1 / data.scaleamount));
-
-
-			
-
-
-			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
-
-            scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin -= glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
-
-
-
-		}
+        UI::DoUIobjectReTransformations(currentselectedobj, scene, data);
        
-		for (size_t i = 0; i < auto_rotate_on.size(); i++)
-		{
-			if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
-			{
-
-				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
-				scene.GetModel(auto_rotate_on.at(i))->transformation.rotate(-scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
-
-				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
-
-			}
-		}
-        
+        UI::HandleReverseAutoTranslation(currentselectedobj, scene, auto_rotate_on);
 		
 
         PrevMousePos = temp_mouse_pos;
@@ -728,16 +515,7 @@ int main()
     DeleteShaderProgram(ShadowMapShader.GetID());
     DeleteShaderProgram(FrameBufferShader.GetID());
 
-    for (size_t i = 0; i < textures_imported.size(); i++)
-    {
-        if (textures_imported.at(i).first != nullptr)
-        {
-            delete textures_imported.at(i).first;
-
-        }
-
-    }
-
+    
    // delete gizmo_arrow;
 
     UI::EndUI();

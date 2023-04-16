@@ -874,7 +874,73 @@ public:
 		return temp_mouse;
 	}
 
-	
+	void CopyModelKeyboardAction(size_t currentselectedobj , GLuint shader , GLFWwindow *window ,std::vector<std::string> &logs ,glm::vec4 lightcolor , glm::vec3 lightpos)
+	{
+		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && currentselectedobj >= 2)
+		{
+
+			static int counterf = NULL;
+
+			if (counterf < 1)
+			{
+
+				CopyModel(currentselectedobj - 2);
+
+				handlelights(shader);
+
+				UseShaderProgram(shader);
+
+				//glUniformMatrix4fv(glGetUniformLocation(defaultshader.GetID(), "model"), 1, GL_FALSE, glm::value_ptr(pyramidmodel));
+				glUniform4f(glGetUniformLocation(shader, "lightColor1"), lightcolor.x, lightcolor.y, lightcolor.z, lightcolor.w);
+				glUniform3f(glGetUniformLocation(shader, "lightpos1"), lightpos.x, lightpos.y, lightpos.z);
+
+				std::string logtemp = "A new object is duplicated!";
+
+				logs.push_back(logtemp);
+
+			}
+
+
+			counterf++;
+		}
+
+	}
+
+	void DeleteModelKeyboardAction(int &currentselectedobj , GLFWwindow *window , std::vector<std::string>& logs)
+	{
+
+		if (glfwGetKey(window, GLFW_KEY_DELETE) == GLFW_PRESS && currentselectedobj >= 2)
+		{
+			uint* tempptr = GetModel(GetModelCount() - 1)->GetModelIDcounterptr();
+
+			*GetModel(GetModelCount() - 1)->GetModelIDcounterptr() -= 1;
+
+			DeleteModel(currentselectedobj - 2);
+
+			if (GetModelCount() >= 1)
+			{
+				for (size_t i = 0; i < GetModelCount(); i++)
+				{
+					if (GetModel(i)->GetModelID() > 2 && GetModel(currentselectedobj - 3)->GetModelID() != GetModelCount() + 1)
+					{
+						*GetModel(i)->GetModelIDptr() -= 1;
+
+					}
+
+				}
+			}
+
+			std::cout << "NEW MODEL ID COUNTER: " << *tempptr << "\n";
+
+			std::string logtemp = "A new object is deleted!";
+
+			logs.push_back(logtemp);
+
+			currentselectedobj = 0;
+
+		}
+
+	}
 
 };
 

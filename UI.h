@@ -252,7 +252,6 @@ namespace UI
 		ImVec2 uv1(1, 0);
 
 		
-	
 		//ImGui::Image((void*)(intptr_t)screen_image, ImVec2(viewport_size.x, viewport_size.y), uv0, uv1);
 		ImGui::Image((void*)(intptr_t)screen_image, ImVec2(1920, 1080), uv0, uv1);
 
@@ -266,6 +265,174 @@ namespace UI
 		ImGui::End();
 
 	}
+
+	void DoUIobjectTransformations(size_t currentselectedobj, scene& scene, UI::UIdataPack& data)
+	{
+		if (currentselectedobj >= 2)
+		{
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
+
+			scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin += glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
+
+
+			if (data.scaleamount != 0.0f)
+			{
+				scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
+
+				scene.RecalculateObjectScales(currentselectedobj, glm::vec3(data.scaleamount, data.scaleamount, data.scaleamount));
+
+			}
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.rotate(data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
+
+
+		}
+
+	}
+
+	void DoUIobjectReTransformations(size_t currentselectedobj , scene &scene , UI::UIdataPack &data)
+	{
+		if (currentselectedobj >= 2)
+		{
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.rotate(-data.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.scale(glm::vec3(1 / data.scaleamount, 1 / data.scaleamount, 1 / data.scaleamount));
+
+
+			scene.GetModel(currentselectedobj - 2)->transformation.translate(-glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z));
+
+			scene.GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin -= glm::vec3(data.moveamount.x, data.moveamount.y, data.moveamount.z);
+
+
+		}
+
+	}
+
+	void HandleSliderMaxValues(UI::UIdataPack &data , GLFWwindow *window)
+	{
+
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+		{
+			if (data.moveamount.x == data.newtreshold.x)
+			{
+				data.maxmove.x = 2.0f * data.newtreshold.x;
+				data.newtreshold.x = data.maxmove.x;
+			}
+			if (data.moveamount.y == data.newtreshold.y)
+			{
+				data.maxmove.y = 2.0f * data.newtreshold.y;
+				data.newtreshold.y = data.maxmove.y;
+			}
+			if (data.moveamount.z == data.newtreshold.z)
+			{
+				data.maxmove.z = 2.0f * data.newtreshold.z;
+				data.newtreshold.z = data.maxmove.z;
+			}
+			if (data.scaleamount == data.maxscale)
+			{
+				data.maxscale = 2.0f * data.maxscale;
+				//maxscale = scaleamount;
+			}
+		}
+
+
+	}
+
+	void HandleAutoRotation(int &currentselectedobj , scene &scene ,std::vector<uint> &auto_rotate_on)
+	{
+		for (size_t i = 0; i < auto_rotate_on.size(); i++)
+		{
+			if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
+			{
+				scene.GetModel(auto_rotate_on.at(i))->UIprop.degree = scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount;
+
+				scene.GetModel(auto_rotate_on.at(i))->UIprop.degree += 0.1f;
+
+				if (scene.GetModel(auto_rotate_on.at(i))->UIprop.degree >= 360.0f)
+				{
+					scene.GetModel(auto_rotate_on.at(i))->UIprop.degree = NULL;
+				}
+
+				scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount = scene.GetModel(auto_rotate_on.at(i))->UIprop.degree;
+			}
+
+		}
+
+		for (size_t i = 0; i < auto_rotate_on.size(); i++)
+		{
+			if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
+			{
+				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+				scene.GetModel(auto_rotate_on.at(i))->transformation.rotate(scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
+
+			}
+
+		}
+
+	}
+
+	void HandleReverseAutoTranslation(size_t currentselectedobj , scene &scene , std::vector<uint>& auto_rotate_on)
+	{
+
+		for (size_t i = 0; i < auto_rotate_on.size(); i++)
+		{
+			if (auto_rotate_on.at(i) != CURRENT_OBJECT(currentselectedobj))
+			{
+
+				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+				scene.GetModel(auto_rotate_on.at(i))->transformation.rotate(-scene.GetModel(auto_rotate_on.at(i))->UIprop.rotationamount, glm::vec3(0.0f, 1.0f, 0.0f));
+
+				scene.GetModel(auto_rotate_on.at(i))->transformation.translate(-glm::vec3(0.0f, 0.0f, 0.0f));
+
+			}
+		}
+
+	}
+
+	void IncrementRotationDegree(UI::UIdataPack &data)
+	{
+		if (data.autorotate)
+		{
+			data.degree += 0.1f;
+
+			if (data.degree >= 360.0f)
+			{
+				data.degree = NULL;
+			}
+
+			data.rotationamount = data.degree;
+		}
+		if (!data.autorotate)
+		{
+			data.degree = data.rotationamount;
+		}
+
+	}
+
 
 	void ConfigureUI(size_t currentselectedobj ,UIdataPack &data , scene &scene , std::vector<std::string>& logs ,GLuint import_shader , glm::vec4 lightcolor , glm::vec3 lightpos , GLFWwindow* window , std::vector<uint> &auto_rotate_on , GLuint screen_image,GLuint light_shader)
 	{
@@ -733,7 +900,7 @@ namespace UI
 									if (texture_path != nullptr)
 									{
 
-										Textures newtexture(texture_path, s, GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE, button_type, map_type_string);
+										Textures newtexture(texture_path, s, GL_TEXTURE_2D, GL_UNSIGNED_BYTE, button_type, map_type_string);
 
 										Texture texture;
 										texture.id = *newtexture.GetTexture();

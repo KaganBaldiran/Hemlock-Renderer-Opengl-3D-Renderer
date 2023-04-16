@@ -103,7 +103,7 @@ void Camera::HandleInputs(GLFWwindow* window, vec2<int> menu_size)
 	}
 
 
-	if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+	if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
 	{
 		int height = NULL, width = NULL;
 		glfwGetWindowSize(window, &width, &height);
@@ -147,7 +147,7 @@ void Camera::HandleInputs(GLFWwindow* window, vec2<int> menu_size)
 		glfwSetCursorPos(window, (w_width / 2), (w_height / 2));
 	}
 
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_RELEASE)
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE)
 	{
 
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

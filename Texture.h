@@ -17,7 +17,7 @@ struct GLFWwindow;
    {
    public:
 
-	   Textures(const char* filepath, GLenum slot, GLenum texturetype, GLenum format, GLenum pixeltype , unsigned int texture_type_for_pbr , std::string texture_type_for_pbr_str);
+	   Textures(const char* filepath, GLenum slot, GLenum texturetype, GLenum pixeltype , unsigned int texture_type_for_pbr , std::string texture_type_for_pbr_str);
 	   ~Textures();
 
 	   void Bind();
@@ -45,6 +45,7 @@ struct GLFWwindow;
 	   unsigned int texture_type_of_pbr;
 	   std::string texture_type_of_pbr_str;
 	   std::string path;
+	   int channels;
 
    };
 

@@ -6,7 +6,7 @@
 #include <glfw3.h>
 #include <iostream>
 
-Textures::Textures(const char* filepath , GLenum slot , GLenum texturetype , GLenum format , GLenum pixeltype, unsigned int texture_type_for_pbr, std::string texture_type_for_pbr_str)
+Textures::Textures(const char* filepath , GLenum slot , GLenum texturetype , GLenum pixeltype, unsigned int texture_type_for_pbr, std::string texture_type_for_pbr_str)
 {
 	std::string temp(filepath);
 	path = temp;
@@ -17,7 +17,7 @@ Textures::Textures(const char* filepath , GLenum slot , GLenum texturetype , GLe
 	type = texturetype;
 	//stbi_set_flip_vertically_on_load(true);
 	int channels;
-	unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, STBI_rgb_alpha);
+	unsigned char* pixels = stbi_load(filepath, &width, &height, &channels,0);
 	if (!pixels)
 	{
 
@@ -25,6 +25,26 @@ Textures::Textures(const char* filepath , GLenum slot , GLenum texturetype , GLe
 		return;
 
 	}
+
+	this->channels = channels;
+
+	GLenum formattex = NULL;
+	if (channels == 1)
+	{
+		formattex = GL_RED;
+	}	
+	else if (channels == 3)
+	{
+		formattex = GL_RGB;
+
+	}
+	else if (channels == 4)
+	{
+		formattex = GL_RGBA;
+
+	}
+
+	std::cout << "Texture channel count : " << channels << "\n";
 
 	glGenTextures(1, &texture);
 	glActiveTexture(GL_TEXTURE0 + slot);
@@ -36,7 +56,7 @@ Textures::Textures(const char* filepath , GLenum slot , GLenum texturetype , GLe
 	glTexParameteri(texturetype, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(texturetype, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(texturetype, 0, format, width, height, 0, format, pixeltype, pixels);
+	glTexImage2D(texturetype, 0, formattex, width, height, 0, formattex, pixeltype, pixels);
 	glGenerateMipmap(texturetype);
 
 	stbi_image_free(pixels);
