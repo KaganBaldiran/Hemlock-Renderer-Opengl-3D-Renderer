@@ -9,12 +9,13 @@
 
 #define LIGHTTYPE "class Light"
 #define MODELTYPE "class Model"
+#define SUCCESS 1
+#define FAIL -1
 
 typedef unsigned long int Entity_id_t;
 typedef std::string Entity_type_t;
 typedef unsigned int Entity_stencil_index;
-
-
+typedef short int Entity_Flag_t
 
 class Entity
 {
@@ -43,6 +44,30 @@ public:
 		this->data = (void*)data;
 
 	}
+	
+	template<typename typenme>
+	typenme* CreateEntityWithSubPrimitive(Entity_type_t entitytype_p , const char* filepath)
+	{
+	     this->data = new Model(filepath);
+	     this->data_allocated = true;	
+	  
+	     return (typenme*)this->data;
+	}
+	
+	Entity_Flag_t DeleteSubPrimitive()
+	{
+	     delete data;
+		
+	     if(data)
+	     {
+		return SUCCESS; 
+	     }
+	     else
+	     {
+		return FAIL;     
+	     }
+		
+	}	
     
 	template<typename typenm>
 	typenm* GetData() 
@@ -72,7 +97,7 @@ public:
 	{
 		if (data_allocated)
 		{
-			delete data;
+		    delete data;
 		}
 	}
 
@@ -85,8 +110,9 @@ private:
 
 	void* data;
 	bool data_allocated = false;
-
-
+	
+	std::vector<void*> components;
+	
 	Entity_id_t GenerateEntityID()
 	{
 		static Entity_id_t increment = NULL;
