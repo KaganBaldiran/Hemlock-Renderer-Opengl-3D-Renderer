@@ -10,6 +10,7 @@
 #define MODELTYPE "class Model"
 #define SUCCESS 1
 #define FAIL -1
+#define GET_VARIABLE_NAME(Variable) (#Variable)
 
 typedef unsigned long int Entity_id_t;
 typedef std::string Entity_type_t;
@@ -94,13 +95,17 @@ public:
 	
 	void AddComponent(void* component)
 	{
-	    componenents.push_back(component);	
+	    components.push_back(component);	
 	}
 	
-	template<typename type1, typename type2 , typename output_type>
-	output_type SetComponents((*fun)(type1 , type2))
+	void SetComponents(const char* variable_uniform_to_set , void* value)
 	{
-	    return (*fun)(int , int);
+		   
+		   for(size_t i = 0; i < components.size();i++)
+					{
+						  components.at(i)
+					}
+		   
 	}
 	
 	~Entity()
