@@ -6,7 +6,6 @@
 #include "Light.h"
 #include "Model.h"
 
-
 #define LIGHTTYPE "class Light"
 #define MODELTYPE "class Model"
 #define SUCCESS 1
@@ -67,7 +66,7 @@ public:
 		return FAIL;     
 	     }
 		
-	}	
+	}
     
 	template<typename typenm>
 	typenm* GetData() 
@@ -92,7 +91,18 @@ public:
 		}
 
 	};
-
+	
+	void AddComponent(void* component)
+	{
+	    componenents.push_back(component);	
+	}
+	
+	template<typename type1, typename type2 , typename output_type>
+	output_type SetComponents((*fun)(type1 , type2))
+	{
+	    return (*fun)(int , int);
+	}
+	
 	~Entity()
 	{
 		if (data_allocated)
