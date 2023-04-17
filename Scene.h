@@ -1,138 +1,20 @@
-#ifndef LIGHTCLASS
-#define LIGHTCLASS 
+#ifndef SCENE 
+#define SCENE 
 
 #include "Mesh.h"
 #include <memory>
 #include <FreeImage.h>
 #include "Shadow_Map.h"
+#include "Entity.h"
+#include "Light.h"
+#include "PickingTexture.h"
 
-#define CUBE_LIGHT 1080
-#define SPHERE_LIGHT 1090
-#define POINT_LIGHT 100
-#define DIRECTIONAL_LIGHT 200
-#define SPOT_LIGHT 300
 
 #define CURRENT_OBJECT(Current_obj) (Current_obj - 2)
 
 #define X_GIZMO 10000
 #define Y_GIZMO 20000
 #define Z_GIZMO 30000
-
-class Light
-{
-public:
-
-
-	Light(glm::vec3 meshposition,glm::vec3 meshscale,glm::vec4 light_color, GLuint shader, uint16 light_shape , uint16 lighttype)
-	{
-		if (light_shape == CUBE_LIGHT)
-		{
-
-			Vertexs lightVertices[] =
-			{ //     COORDINATES     //
-				Vertexs{glm::vec3(-0.1f, -0.1f,  0.1f)},
-				Vertexs{glm::vec3(-0.1f, -0.1f, -0.1f)},
-				Vertexs{glm::vec3(0.1f, -0.1f, -0.1f)},
-				Vertexs{glm::vec3(0.1f, -0.1f,  0.1f)},
-				Vertexs{glm::vec3(-0.1f,  0.1f,  0.1f)},
-				Vertexs{glm::vec3(-0.1f,  0.1f, -0.1f)},
-				Vertexs{glm::vec3(0.1f,  0.1f, -0.1f)},
-				Vertexs{glm::vec3(0.1f,  0.1f,  0.1f)}
-			};
-
-			GLuint lightIndices[] =
-			{
-				0, 1, 2,
-				0, 2, 3,
-				0, 4, 7,
-				0, 7, 3,
-				3, 7, 6,
-				3, 6, 2,
-				2, 6, 5,
-				2, 5, 1,
-				1, 5, 4,
-				1, 4, 0,
-				4, 5, 6,
-				4, 6, 7
-			};
-
-
-			
-
-
-			std::vector <Vertexs> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertexs));
-			std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-			std::vector<Textures> tex;
-			// Crate light mesh
-			Meshs *light = new Meshs(lightVerts, lightInd, tex , shader);
-
-			lightmesh = light;
-
-		}
-		else if (light_shape == SPHERE_LIGHT)
-		{
-
-
-
-		}
-
-		this->lightpos = meshposition;
-		this->lightscale = meshscale;
-		this->light_color = light_color;
-
-		lightmodel = glm::translate(lightmodel, this->lightpos);
-		lightmodel = glm::scale(lightmodel, this->lightscale);
-
-		UseShaderProgram(shader);
-
-		transformations.transformmatrix = lightmodel;
-
-		glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(lightmodel));
-		glUniform4f(glGetUniformLocation(shader, "lightColor"), light_color.x, light_color.y, light_color.z, light_color.w);
-
-		UseShaderProgram(0);
-
-		
-
-	};
-
-	~Light()
-	{
-
-		delete lightmesh;
-
-	}
-
-	
-
-	void Draw(GLuint shader, Camera& camera) 
-	{
-		//lightmodel = glm::translate(lightmodel, this->lightpos);
-		//lightmodel = glm::scale(lightmodel, this->lightscale);
-
-		UseShaderProgram(shader);
-
-		glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(lightmodel));
-		glUniform4f(glGetUniformLocation(shader, "lightColor"), light_color.x, light_color.y, light_color.z, light_color.w);
-
-		UseShaderProgram(0);
-	
-		lightmesh->Draw(shader, camera,GL_TRIANGLES);
-	
-	};
-
-private:
-
-	Meshs *lightmesh;
-	glm::vec3 lightpos;
-	glm::vec4 light_color;
-	glm::vec3 lightscale;
-	glm::mat4 lightmodel = glm::mat4(1.0f);
-	float originpoint;
-	worldtransform transformations;
-	//uint16 light_shape;
-
-};
 
 class scene
 {
@@ -149,6 +31,10 @@ public:
 
 	unsigned int quadVAO, quadVBO;
 
+	int CURRENT_LIGHT(int current_light_index)
+	{
+		return current_light_index - (2 + models.size()) ;
+	}
 
 	void FindGlobalMeshScales()
 	{
@@ -656,16 +542,28 @@ public:
 	void DrawGizmo(GLuint shader, Camera& camera , size_t iterator , int currentselectedobject , std::pair<uint , bool> enablegizmo_p)
 	{
 
-		glm::vec3 model_transformation(models.at(CURRENT_OBJECT(currentselectedobject))->transformation.transformmatrix[3]);
+		int Model_index = -1;
 
-		glm::vec3 model_scales = glm::vec3(models.at(CURRENT_OBJECT(currentselectedobject))->transformation.transformmatrix[0][0], 
-		                                   models.at(CURRENT_OBJECT(currentselectedobject))->transformation.transformmatrix[1][1], 
-			                               models.at(CURRENT_OBJECT(currentselectedobject))->transformation.transformmatrix[2][2]);
+		if (CURRENT_OBJECT(currentselectedobject) < NULL)
+		{
+			Model_index = NULL;
+		}
+		else
+		{
+			Model_index = CURRENT_OBJECT(currentselectedobject);
+
+		}
+
+		glm::vec3 model_transformation(models.at(Model_index)->transformation.transformmatrix[3]);
+
+		glm::vec3 model_scales = glm::vec3(models.at(Model_index)->transformation.transformmatrix[0][0],
+		                                   models.at(Model_index)->transformation.transformmatrix[1][1],
+			                               models.at(Model_index)->transformation.transformmatrix[2][2]);
 			    
 
-		glm::vec3 originpoint(GetModel(CURRENT_OBJECT(currentselectedobject))->originpoint.x,
-			                  GetModel(CURRENT_OBJECT(currentselectedobject))->originpoint.y,
-			                  GetModel(CURRENT_OBJECT(currentselectedobject))->originpoint.z);
+		glm::vec3 originpoint(GetModel(Model_index)->originpoint.x,
+			                  GetModel(Model_index)->originpoint.y,
+			                  GetModel(Model_index)->originpoint.z);
 		
 
 		GetModel(0)->transformation.translate(originpoint);
@@ -677,7 +575,7 @@ public:
 
 		GetModel(0)->transformation.scale(model_scales * 10.0f);
 
-		GetModel(0)->transformation.scale(glm::vec3(GetModel(CURRENT_OBJECT(currentselectedobject))->transformation.scale_avg) / 12.0f);
+		GetModel(0)->transformation.scale(glm::vec3(GetModel(Model_index)->transformation.scale_avg) / 5.0f);
 
 
 		if (iterator == 0)
@@ -743,7 +641,7 @@ public:
 		}
 
 
-		GetModel(0)->transformation.scale(1.0f / (glm::vec3(GetModel(CURRENT_OBJECT(currentselectedobject))->transformation.scale_avg / 12.0f)));
+		GetModel(0)->transformation.scale(1.0f / (glm::vec3(GetModel(Model_index)->transformation.scale_avg / 5.0f)));
 
 
 		GetModel(0)->transformation.scale(1.0f / (model_scales * 10.0f));
@@ -763,7 +661,7 @@ public:
 
 	}
 
-	vec2<double> UseGizmo(GLFWwindow* window , int &currentselectedgizmo , int currentselectedobj, std::pair<uint , bool> &enablegizmo_p , vec2<double> PrevMousePos , Camera camera)
+	vec2<double> UseGizmo(GLFWwindow* window , int &currentselectedgizmo , int currentselectedobj, std::pair<uint , bool> &enablegizmo_p , vec2<double> PrevMousePos , Camera camera , int currentselectedlight , GLuint Model_Shader)
 	{
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
@@ -800,10 +698,14 @@ public:
 		{
 			if (enablegizmo_p.first == Y_GIZMO && enablegizmo_p.second == true)
 			{
-
+				
+				
 				GetModel(CURRENT_OBJECT(currentselectedobj))->transformation.translate(glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL));
 
 				GetModel(CURRENT_OBJECT(currentselectedobj))->dynamic_origin += glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL);
+
+				
+				
 
 
 			}
@@ -874,6 +776,114 @@ public:
 
 			}
 		}
+
+		if (CURRENT_LIGHT(currentselectedlight) >= NULL)
+		{
+
+			Light* currentlight = lights.at(CURRENT_LIGHT(currentselectedlight));
+
+			if (enablegizmo_p.first == Y_GIZMO && enablegizmo_p.second == true)
+			{
+
+
+				currentlight->transformation.translate(glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL));
+
+				currentlight->lightpos += glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL);
+
+				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
+
+				currentlight->lightmodel = currentlight->transformation.transformmatrix;
+
+				handlelights(Model_Shader);
+
+
+			}
+			else if (enablegizmo_p.first == Z_GIZMO && enablegizmo_p.second == true)
+			{
+
+				double active_delta_mouse = NULL;
+
+				if (abs(delta_mouse.y) > abs(delta_mouse.x))
+				{
+					active_delta_mouse = delta_mouse.y;
+
+					if (camera.Get_Orientation().z >= NULL)
+					{
+						active_delta_mouse = -active_delta_mouse;
+					}
+				}
+				else if (abs(delta_mouse.y) <= abs(delta_mouse.x))
+				{
+					active_delta_mouse = -delta_mouse.x;
+
+					if (camera.Get_Orientation().z <= NULL)
+					{
+						active_delta_mouse = -active_delta_mouse;
+					}
+				}
+
+
+
+
+				currentlight->transformation.translate(glm::vec3(NULL, NULL, active_delta_mouse / 20.0f));
+
+
+				currentlight->lightpos += glm::vec3(NULL, NULL, active_delta_mouse / 20.0f);
+
+				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
+
+				currentlight->lightmodel = currentlight->transformation.transformmatrix;
+
+				handlelights(Model_Shader);
+
+
+			}
+
+			else if (enablegizmo_p.first == X_GIZMO && enablegizmo_p.second == true)
+			{
+
+				double active_delta_mouse = NULL;
+
+				if (abs(delta_mouse.y) > abs(delta_mouse.x))
+				{
+					active_delta_mouse = delta_mouse.y;
+
+					if (camera.Get_Orientation().x >= NULL)
+					{
+						active_delta_mouse = -active_delta_mouse;
+					}
+				}
+				else if (abs(delta_mouse.y) <= abs(delta_mouse.x))
+				{
+					active_delta_mouse = delta_mouse.x;
+
+					if (camera.Get_Orientation().x <= NULL)
+					{
+						active_delta_mouse = -active_delta_mouse;
+					}
+				}
+
+
+
+
+				currentlight->transformation.translate(glm::vec3(active_delta_mouse / 20.0f, NULL, NULL));
+
+
+				currentlight->lightpos += glm::vec3(active_delta_mouse / 20.0f, NULL, NULL);
+
+				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
+
+				currentlight->lightmodel = currentlight->transformation.transformmatrix;
+
+				handlelights(Model_Shader);
+				
+			}
+
+
+		}
+		
+
+
 		
 		return temp_mouse;
 	}
@@ -945,6 +955,10 @@ public:
 		}
 
 	}
+
+	
+
+
 
 };
 

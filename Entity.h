@@ -1,9 +1,9 @@
 #ifndef ENTITY 
 #define ENTITY 
 
-#include<iostream>
-#include<vector>
-#include "Scene.h"
+#include <iostream>
+#include <vector>
+#include "Light.h"
 #include "Model.h"
 
 
@@ -28,12 +28,14 @@ public:
 		this->data = nullptr;
 	};
 
-	Entity(Entity_type_t entitytype_p) :entitytype(entitytype_p), data(nullptr)
+	Entity(Entity_type_t entitytype_p , const char* filepath) :entitytype(entitytype_p), data(nullptr)
 	{
 		this->ID = GenerateEntityID();
+		data = new Model(filepath);
+		data_allocated = true;
+		
 	}
 
-	
 	Entity(Entity_type_t entitytype_p ,void *data) :entitytype(entitytype_p) 
 	{
 		this->ID = GenerateEntityID();
@@ -66,6 +68,14 @@ public:
 
 	};
 
+	~Entity()
+	{
+		if (data_allocated)
+		{
+			delete data;
+		}
+	}
+
 
 private:
 
@@ -74,6 +84,8 @@ private:
 	Entity_stencil_index stencil_index;
 
 	void* data;
+	bool data_allocated = false;
+
 
 	Entity_id_t GenerateEntityID()
 	{
@@ -87,8 +99,6 @@ private:
 
 };
 
-
-   
 
 #endif // !ENTITY
 

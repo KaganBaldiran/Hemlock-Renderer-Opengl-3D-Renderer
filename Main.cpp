@@ -26,6 +26,8 @@
 #include "nativefiledialog-extended-master/src/include/nfd.h"
 
 
+
+
 #include"UI.h"
 
 
@@ -92,12 +94,9 @@ int main()
     
     scene.ImportModel("C:/Users/kbald/Desktop/gizmo_arrow.obj", lightshader.GetID());
 
-   
 
-
-
-   
-   
+    
+ 
     glm::vec3 lightpos = glm::vec3(-0.5f, 0.9f, 0.5f);
     
 
@@ -190,7 +189,7 @@ int main()
 
     shadowmap ShadowMap(4096, 4096);
 
-    ShadowMap.LightProjection(lightpos,ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera, UI::current_viewport_size);
+    ShadowMap.LightProjection(scene.LightPositions[0],ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera, UI::current_viewport_size);
 
 
     scene.SetScreenQuads();
@@ -219,7 +218,7 @@ int main()
         camera.updateMatrix(45.0f, 0.1f, 100.0f, window,UI::current_viewport_size);
 
        
-
+       
         UI::HandleSliderMaxValues(data, window);
       
 
@@ -243,7 +242,7 @@ int main()
 
 
       
-        vec2<double> temp_mouse_pos = scene.UseGizmo(window, currentselectedgizmo, currentselectedobj, enablegizmo_p, PrevMousePos,camera);
+        vec2<double> temp_mouse_pos = scene.UseGizmo(window, currentselectedgizmo, currentselectedobj, enablegizmo_p, PrevMousePos,camera , currentselectedlight,defaultshader.GetID());
 
        
         UI::DoUIobjectTransformations(currentselectedobj, scene, data);
@@ -251,7 +250,7 @@ int main()
         UI::HandleAutoRotation(currentselectedobj, scene, auto_rotate_on);
 
        
-        ShadowMap.LightProjection(lightpos, ShadowMapShader.GetID(),window,scene.models,scene.globalscale,camera,UI::current_viewport_size);
+        ShadowMap.LightProjection(scene.LightPositions[0], ShadowMapShader.GetID(), window, scene.models, scene.globalscale, camera, UI::current_viewport_size);
         
         
 
@@ -320,7 +319,7 @@ int main()
             if (i > 1)
             {
                 
-				ShadowMap.LightProjection(lightpos, defaultshader.GetID(), window, scene.models, scene.globalscale,camera,UI::current_viewport_size);
+				ShadowMap.LightProjection(scene.LightPositions[0], defaultshader.GetID(), window, scene.models, scene.globalscale,camera,UI::current_viewport_size);
 
 				glUniform1i(glGetUniformLocation(defaultshader.GetID(), "enablehighlight"), data.enablehighlight);
 
@@ -347,7 +346,7 @@ int main()
 
             }
         }
-        if (CURRENT_OBJECT(currentselectedobj) >= NULL)
+        if (CURRENT_OBJECT(currentselectedobj) >= NULL || scene.CURRENT_LIGHT(currentselectedlight) >= NULL)
         {
             glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
             glStencilMask(0xFF);
@@ -369,7 +368,6 @@ int main()
         
 
         
-
         //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -394,7 +392,7 @@ int main()
             allowclick = true;
         }
 
-
+        
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && allowclick)
         {
             if (currentselectedobj >= 2)
@@ -404,7 +402,6 @@ int main()
             }
 
             allowclick = false;
-            //std::cout << "PRESSED!" << "\n";
             
             vec2<double> mp = UI::CalculateVirtualMouse(window);
 
@@ -427,14 +424,13 @@ int main()
                 currentselectedgizmo = NULL;
 
             }
-            if(index - 1 >= scene.GetModelCount() + scene.lights.size())
+            else if (index == NULL)
             {
                 currentselectedlight = NULL;
                 currentselectedobj = NULL;
-                currentselectedgizmo = index;
+                currentselectedgizmo = NULL;
 
             }
-            
 
             std::cout << "Current selected light: " << currentselectedlight << "\n";
             std::cout << "Current selected obj: " << currentselectedobj << "\n";
@@ -457,15 +453,14 @@ int main()
 
             if (index - 1 >= scene.GetModelCount() + scene.lights.size())
             {
-                currentselectedlight = NULL;
-                //currentselectedobj = NULL;
                 currentselectedgizmo = index;
 
             }
 
         }
+        
 
-      
+        
         UI::CalculateVirtualMouse(window);
 
         //glDisable(GL_FRAMEBUFFER_SRGB);

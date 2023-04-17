@@ -159,6 +159,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="post_process.h" />
     <ClInclude Include="Helper_classes.h" />
     <ClInclude Include="Imgui\imconfig.h" />
