@@ -72,7 +72,7 @@
 		 
 
 		  glm::mat4 lightprojection = glm::mat4(1.0f);
-		  glm::mat4 orthgonalProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -scene_scale , scene_scale );
+		  glm::mat4 orthgonalProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -20.0f , 20.0f );
 		  int height = NULL, width = NULL;
 		  glfwGetWindowSize(window, &width, &height);
 
@@ -170,7 +170,7 @@
 
 		  
 
-		  lightprojection = scale * orthgonalProjection * lightView;
+		  lightprojection = orthgonalProjection * lightView;
 
 		  //lightprojection = lightSpaceMatrix;
 		  //translation = glm::translate(translation, -(average_origin_point / 10.0f));

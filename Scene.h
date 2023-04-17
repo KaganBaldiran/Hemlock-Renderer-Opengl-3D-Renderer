@@ -26,6 +26,7 @@ public:
 	int typeoflights[10];
 	std::vector<Light*> lights;
 	std::vector<Model*> models;
+	std::vector<Entity*> Entities;
 	float globalscale;
 
 
@@ -137,6 +138,95 @@ public:
 
 	}
 
+	void FindGlobalLightScales()
+	{
+		float maxX = -std::numeric_limits<float>::infinity();
+		float maxY = -std::numeric_limits<float>::infinity();
+		float maxZ = -std::numeric_limits<float>::infinity();
+		float minX = std::numeric_limits<float>::infinity();
+		float minY = std::numeric_limits<float>::infinity();
+		float minZ = std::numeric_limits<float>::infinity();
+
+		for (unsigned int i = 0; i < lights.size(); i++)
+		{
+
+			Vertexs origin = lights.at(i)->lightmesh->vertices[0]; // use first vertex as origin point
+
+			for (unsigned int k = 0; k < lights.at(i)->lightmesh->vertices.size(); k++) {
+
+				Vertexs vertex;
+				vertex.position.x = lights.at(i)->lightmesh->vertices[k].position.x - origin.position.x;
+				vertex.position.y = lights.at(i)->lightmesh->vertices[k].position.y - origin.position.y;
+				vertex.position.z = lights.at(i)->lightmesh->vertices[k].position.z - origin.position.z;// subtract origin point from vertex
+
+				maxX = std::max(maxX, vertex.position.x);
+				maxY = std::max(maxY, vertex.position.y);
+				maxZ = std::max(maxZ, vertex.position.z);
+				minX = std::min(minX, vertex.position.x);
+				minY = std::min(minY, vertex.position.y);
+				minZ = std::min(minZ, vertex.position.z);
+
+			}
+			
+			float meshWidth = maxX - minX;
+			float meshHeight = maxY - minY;
+			float meshDepth = maxZ - minZ;
+
+			lights.at(i)->transformation.ObjectScales.x = meshWidth;
+			lights.at(i)->transformation.ObjectScales.y = meshHeight;
+			lights.at(i)->transformation.ObjectScales.z = meshDepth;
+
+			maxX = -std::numeric_limits<float>::infinity();
+			maxY = -std::numeric_limits<float>::infinity();
+			maxZ = -std::numeric_limits<float>::infinity();
+			minX = std::numeric_limits<float>::infinity();
+			minY = std::numeric_limits<float>::infinity();
+			minZ = std::numeric_limits<float>::infinity();
+
+		}
+
+
+		float sceneWidth = -std::numeric_limits<float>::infinity();
+		float sceneHeight = -std::numeric_limits<float>::infinity();
+		float sceneDepth = -std::numeric_limits<float>::infinity();
+
+		for (unsigned int i = 0; i < lights.size(); i++)
+		{
+
+			sceneWidth = std::max(sceneWidth, lights.at(i)->transformation.ObjectScales.x);
+			sceneHeight = std::max(sceneHeight, lights.at(i)->transformation.ObjectScales.y);;
+			sceneDepth = std::max(sceneDepth, lights.at(i)->transformation.ObjectScales.z);
+
+		}
+
+		// Decide on a unit scale for the scene
+		float unitScale = 1.0f; // 1 unit = 1 meter
+
+		float maxDimension = (sceneWidth + sceneHeight + sceneDepth) / 3;
+		float globalScale = maxDimension / unitScale;
+
+		//this->globalscale = globalScale;
+
+		for (size_t i = 0; i < models.size(); i++)
+		{
+			lights.at(i)->transformation.scale_avg = (lights.at(i)->transformation.ObjectScales.x + lights.at(i)->transformation.ObjectScales.y + lights.at(i)->transformation.ObjectScales.z) / 3;
+			lights.at(i)->transformation.dynamic_scale_avg = lights.at(i)->transformation.scale_avg;
+
+			lights.at(i)->transformation.ObjectScales.x = lights.at(i)->transformation.ObjectScales.x;
+			lights.at(i)->transformation.ObjectScales.y = lights.at(i)->transformation.ObjectScales.y;
+			lights.at(i)->transformation.ObjectScales.z = lights.at(i)->transformation.ObjectScales.z;
+
+
+			std::cout << "Model width: " << lights.at(i)->transformation.ObjectScales.x << " Model height: " << lights.at(i)->transformation.ObjectScales.y << " Model Depth: " << lights.at(i)->transformation.ObjectScales.z << "\n";
+			std::cout << "Scale avg: " << lights.at(i)->transformation.scale_avg << "\n";
+
+		}
+
+		std::cout << "GLOBAL SCALE: " << globalScale << "\n";
+
+	}
+
+
 	void RecalculateObjectScales(size_t selected_obj , glm::vec3 scale)
 	{
 
@@ -199,6 +289,8 @@ public:
 			LightColors[numberoflights] = light_color;
 			LightPositions[numberoflights] = meshposition;
 			typeoflights[numberoflights] = lighttype;
+
+			FindGlobalLightScales();
 
 			numberoflights++;
 		}
@@ -539,31 +631,49 @@ public:
 
 	}
 
-	void DrawGizmo(GLuint shader, Camera& camera , size_t iterator , int currentselectedobject , std::pair<uint , bool> enablegizmo_p)
+	void DrawGizmo(GLuint shader, Camera& camera , size_t iterator , int currentselectedobject , std::pair<uint , bool> enablegizmo_p , int currentselectedlight)
 	{
 
 		int Model_index = -1;
 
-		if (CURRENT_OBJECT(currentselectedobject) < NULL)
+		glm::vec3 model_transformation;
+		glm::vec3 model_scales;
+		glm::vec3 originpoint;
+
+		if (CURRENT_LIGHT(currentselectedlight) >= NULL)
 		{
-			Model_index = NULL;
+			Model_index = CURRENT_LIGHT(currentselectedlight);
+
+			model_transformation = glm::vec3(lights.at(Model_index)->transformation.transformmatrix[3]);
+
+			model_scales = glm::vec3(lights.at(Model_index)->transformation.transformmatrix[0][0],
+				                     lights.at(Model_index)->transformation.transformmatrix[1][1],
+				                     lights.at(Model_index)->transformation.transformmatrix[2][2]);
+
+
+			originpoint = glm::vec3(lights.at(Model_index)->originpoint.x,
+				                    lights.at(Model_index)->originpoint.y,
+				                    lights.at(Model_index)->originpoint.z);
+
 		}
-		else
+		else if(CURRENT_OBJECT(currentselectedobject) >= NULL)
 		{
 			Model_index = CURRENT_OBJECT(currentselectedobject);
 
+			model_transformation = glm::vec3(models.at(Model_index)->transformation.transformmatrix[3]);
+
+			model_scales = glm::vec3(models.at(Model_index)->transformation.transformmatrix[0][0],
+				                     models.at(Model_index)->transformation.transformmatrix[1][1],
+				                     models.at(Model_index)->transformation.transformmatrix[2][2]);
+
+
+			originpoint = glm::vec3(GetModel(Model_index)->originpoint.x,
+				                    GetModel(Model_index)->originpoint.y,
+				                    GetModel(Model_index)->originpoint.z);
+
 		}
 
-		glm::vec3 model_transformation(models.at(Model_index)->transformation.transformmatrix[3]);
-
-		glm::vec3 model_scales = glm::vec3(models.at(Model_index)->transformation.transformmatrix[0][0],
-		                                   models.at(Model_index)->transformation.transformmatrix[1][1],
-			                               models.at(Model_index)->transformation.transformmatrix[2][2]);
-			    
-
-		glm::vec3 originpoint(GetModel(Model_index)->originpoint.x,
-			                  GetModel(Model_index)->originpoint.y,
-			                  GetModel(Model_index)->originpoint.z);
+		
 		
 
 		GetModel(0)->transformation.translate(originpoint);
@@ -575,7 +685,19 @@ public:
 
 		GetModel(0)->transformation.scale(model_scales * 10.0f);
 
-		GetModel(0)->transformation.scale(glm::vec3(GetModel(Model_index)->transformation.scale_avg) / 5.0f);
+		if (CURRENT_LIGHT(currentselectedlight) >= NULL)
+		{
+
+			GetModel(0)->transformation.scale(glm::vec3(lights.at(Model_index)->transformation.scale_avg) / 5.0f);
+			//GetModel(0)->transformation.scale(glm::vec3(GetModel(0)->transformation.scale_avg) / 5.0f);
+
+
+		}
+		else if (CURRENT_OBJECT(currentselectedobject) >= NULL)
+		{
+			GetModel(0)->transformation.scale(glm::vec3(GetModel(Model_index)->transformation.scale_avg) / 5.0f);
+
+		}
 
 
 		if (iterator == 0)
@@ -640,9 +762,18 @@ public:
 
 		}
 
+		if (CURRENT_LIGHT(currentselectedlight) >= NULL)
+		{
 
-		GetModel(0)->transformation.scale(1.0f / (glm::vec3(GetModel(Model_index)->transformation.scale_avg / 5.0f)));
+		   GetModel(0)->transformation.scale(1.0f / (glm::vec3(lights.at(Model_index)->transformation.scale_avg / 5.0f)));
+		   //GetModel(0)->transformation.scale(1.0f / (glm::vec3(GetModel(0)->transformation.scale_avg / 5.0f)));
 
+		}
+		else if (CURRENT_OBJECT(currentselectedobject) >= NULL)
+		{
+
+			GetModel(0)->transformation.scale(1.0f / (glm::vec3(GetModel(Model_index)->transformation.scale_avg / 5.0f)));
+		}
 
 		GetModel(0)->transformation.scale(1.0f / (model_scales * 10.0f));
 
@@ -790,6 +921,8 @@ public:
 
 				currentlight->lightpos += glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL);
 
+				currentlight->originpoint += glm::vec3(NULL, -delta_mouse.y / 20.0f, NULL);
+
 				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
 
 				currentlight->lightmodel = currentlight->transformation.transformmatrix;
@@ -829,6 +962,8 @@ public:
 
 
 				currentlight->lightpos += glm::vec3(NULL, NULL, active_delta_mouse / 20.0f);
+
+				currentlight->originpoint += glm::vec3(NULL, NULL, active_delta_mouse / 20.0f);
 
 				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
 
@@ -870,6 +1005,8 @@ public:
 
 
 				currentlight->lightpos += glm::vec3(active_delta_mouse / 20.0f, NULL, NULL);
+
+				currentlight->originpoint += glm::vec3(active_delta_mouse / 20.0f, NULL, NULL);
 
 				LightPositions[CURRENT_LIGHT(currentselectedlight)] = currentlight->lightpos;
 

@@ -205,7 +205,6 @@ int main()
 
         UI::FindCurrentViewportSize(window);
         
-
 		glClearColor(data.clear_color.x, data.clear_color.y, data.clear_color.z, data.clear_color.w);
         glClearStencil(0); // this is the default value
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -218,6 +217,8 @@ int main()
         camera.updateMatrix(45.0f, 0.1f, 100.0f, window,UI::current_viewport_size);
 
        
+        std::cout << "Light origin x: " << scene.lights.at(0)->originpoint.x << "Light origin y: " << scene.lights.at(0)->originpoint.y << "Light origin z: " << scene.lights.at(0)->originpoint.z << "\n";
+
        
         UI::HandleSliderMaxValues(data, window);
       
@@ -356,7 +357,7 @@ int main()
             {
                 glStencilFunc(GL_ALWAYS, i + 1 + scene.GetModelCount() + 1 + scene.lights.size() + 2, -1);
 
-                scene.DrawGizmo(lightshader.GetID(), camera, i,currentselectedobj,enablegizmo_p);
+                scene.DrawGizmo(lightshader.GetID(), camera, i,currentselectedobj,enablegizmo_p,currentselectedlight);
 
             }
 
