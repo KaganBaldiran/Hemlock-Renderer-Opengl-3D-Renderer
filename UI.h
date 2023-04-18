@@ -14,17 +14,66 @@
 #include "Imgui/imgui_impl_opengl3.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "Texture.h"
+#include <tuple>
+
+typedef std::tuple<ImVec4, ImVec4, ImVec4 , ImVec4, ImVec4 , ImVec4> color_sheme_t;
+// Dark theme color values
+#define DARK_THEME color_sheme_t(ImVec4(0.1f, 0.1f, 0.1f, 1.0f), ImVec4(0.2f, 0.2f, 0.2f, 1.0f), ImVec4(0.25f, 0.25f, 0.25f, 1.0f), ImVec4(0.4f, 0.4f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f),ImVec4(0.041f, 0.041f, 0.044f, 0.00f))
+#define LIGHT_THEME color_sheme_t(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.7f, 0.7f, 0.7f, 1.0f), ImVec4(0.6f, 0.6f, 0.6f, 1.0f), ImVec4(0.2f, 0.2f, 0.2f, 1.0f),ImVec4(0.5f, 0.5f, 0.5f, 1.0f))
+#define BLUE_THEME color_sheme_t(ImVec4(0.1f, 0.1f, 0.3f, 1.0f), ImVec4(0.2f, 0.2f, 0.6f, 1.0f), ImVec4(0.25f, 0.25f, 0.3f, 1.0f), ImVec4(0.4f, 0.4f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.041f, 0.041f, 0.044f, 0.00f))
+#define CUSTOM_THEME color_sheme_t(ImVec4(0.3f, 0.3f, 0.3f, 1.0f), ImVec4(0.4f, 0.4f, 0.4f, 1.0f), ImVec4(0.35f, 0.35f, 0.35f, 1.0f),  ImVec4(0.7f, 0.7f, 0.7f, 1.0f), ImVec4(0.9f, 0.9f, 0.9f, 1.0f), ImVec4(0.1f, 0.1f, 0.1f, 1.0f))
+#define PINK_THEME color_sheme_t(ImVec4(0.3f, 0.1f, 0.1f, 1.0f), ImVec4(0.6f, 0.2f, 0.2f, 1.0f), ImVec4(0.3f, 0.25f, 0.25f, 1.0f), ImVec4(0.4f, 0.4f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.044f, 0.041f, 0.041f, 0.00f))
+#define CYAN_THEME color_sheme_t(ImVec4(0.0f, 0.2f, 0.2f, 1.0f), ImVec4(0.0f, 0.4f, 0.4f, 1.0f), ImVec4(0.0f, 0.5f, 0.5f, 1.0f), ImVec4(0.0f, 0.8f, 0.8f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define ORANGE_THEME color_sheme_t(ImVec4(0.8f, 0.4f, 0.1f, 1.0f), ImVec4(1.0f, 0.5f, 0.2f, 1.0f), ImVec4(1.0f, 0.6f, 0.3f, 1.0f), ImVec4(1.0f, 0.7f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define GREEN_THEME color_sheme_t(ImVec4(0.1f, 0.3f, 0.1f, 1.0f), ImVec4(0.2f, 0.5f, 0.2f, 1.0f), ImVec4(0.25f, 0.6f, 0.25f, 1.0f), ImVec4(0.4f, 0.7f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define NORDIC_THEME color_sheme_t(ImVec4(0.05f, 0.05f, 0.05f, 1.0f), ImVec4(0.16f, 0.23f, 0.24f, 1.0f), ImVec4(0.20f, 0.29f, 0.30f, 1.0f), ImVec4(0.26f, 0.35f, 0.36f, 1.0f), ImVec4(0.85f, 0.85f, 0.85f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define GITHUB_STYLE_THEME color_sheme_t(ImVec4(0.13f, 0.17f, 0.23f, 1.0f), ImVec4(0.18f, 0.22f, 0.28f, 1.0f), ImVec4(0.22f, 0.26f, 0.32f, 1.0f), ImVec4(0.28f, 0.32f, 0.38f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define INTELLIJ_STYLE_THEME color_sheme_t(ImVec4(0.0f, 0.0f, 0.0f, 1.0f), ImVec4(0.25f, 0.25f, 0.25f, 1.0f), ImVec4(0.35f, 0.35f, 0.35f, 1.0f), ImVec4(0.45f, 0.45f, 0.45f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+
 
 namespace UI
 {
+	struct UIcolorShemePack
+	{
+		ImVec4 MenuBackgroundColor;
+		ImVec4 ChildMenuColor;
+		ImVec4 MidMenuColor;
+		ImVec4 BorderColor;
+		ImVec4 TextColor;
+		ImVec4 ViewportBackgroundColor;
 
+		void SetMenuBackgroundColor(ImVec4 mbgcolor)
+		{
+			MenuBackgroundColor = mbgcolor;
+		}
+
+		void SetChildMenuColor(ImVec4 cmcolor)
+		{
+			ChildMenuColor = cmcolor;
+		}
+
+		void operator()(const color_sheme_t &color_sh) 
+		{
+			MenuBackgroundColor = std::get<0>(color_sh);
+			ChildMenuColor = std::get<1>(color_sh);
+			MidMenuColor = std::get<2>(color_sh);
+			BorderColor = std::get<3>(color_sh);
+			TextColor = std::get<4>(color_sh);
+			ViewportBackgroundColor = std::get<5>(color_sh);
+		}
+
+	};
 
 	vec2<int> current_win_size = { (1000/5.4f),1000-18 };
 	vec2<int> current_viewport_size;
+	vec2<float> ApplicationSettingSizes;
 	vec2<float> viewport_size;
 	float image_ratio_divisor = NULL;
 
+	UIcolorShemePack current_color_sheme;
+	color_sheme_t chosen_color_sheme = DARK_THEME;
 
+	
     struct UIdataPack
     {
         bool renderlights = false;
@@ -62,7 +111,6 @@ namespace UI
     };
 
 	
-
 	void InitNewUIwindow()
 	{
 		ImGui::CreateContext();
@@ -84,19 +132,26 @@ namespace UI
 		ImGui::NewFrame();
 	}
 
-	void SetStyle()
+	void SetStyle(UI::UIdataPack &data)
 	{
 		ImGuiStyle &style = ImGui::GetStyle();
 
-		// Modify the style properties
-		style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // Set the text color to white
-		style.Colors[ImGuiCol_WindowBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-		style.Colors[ImGuiCol_Border] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f);
+		current_color_sheme(chosen_color_sheme);
+
+		data.clear_color = current_color_sheme.ViewportBackgroundColor;
+
+		style.Colors[ImGuiCol_Text] = current_color_sheme.TextColor; 
+		style.Colors[ImGuiCol_WindowBg] = current_color_sheme.MenuBackgroundColor;
+		style.Colors[ImGuiCol_Border] = current_color_sheme.BorderColor;
+		style.Colors[ImGuiCol_MenuBarBg] = current_color_sheme.MenuBackgroundColor;
+
+	
+
 		style.FrameRounding = 5.0f;
 		style.ItemSpacing = ImVec2(20, 10);
 		style.ChildBorderSize = 1.3f;
 		style.FrameBorderSize = 1.3f;
-		style.Alpha = 0.9f;// Set the rounding of frame corners to 5.0f
+		style.Alpha = 0.9f;
 		style.ScrollbarSize = 10.0f;
 		style.WindowMinSize = ImVec2(0, 0);
         
@@ -232,6 +287,7 @@ namespace UI
 		ImGui::SetNextWindowPos(ImVec2(current_win_size.x, 18));
 		ImGui::SetNextWindowSize(ImVec2(winsize.x - current_win_size.x, current_win_size.y));
 
+		//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
 
 		ImGui::Begin("Viewport", (bool*)0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
@@ -251,9 +307,11 @@ namespace UI
 		ImVec2 uv0(0, 1); // Bottom-left corner of texture
 		ImVec2 uv1(1, 0);
 
-		
+		//glEnable(GL_FRAMEBUFFER_SRGB);
 		//ImGui::Image((void*)(intptr_t)screen_image, ImVec2(viewport_size.x, viewport_size.y), uv0, uv1);
 		ImGui::Image((void*)(intptr_t)screen_image, ImVec2(1920, 1080), uv0, uv1);
+
+		//glDisable(GL_FRAMEBUFFER_SRGB);
 
 		
 		ImGui::SetCursorPos(ImVec2(winsize.x / 1.3f, winsize.y / 30.0f));
@@ -263,6 +321,8 @@ namespace UI
 
 
 		ImGui::End();
+
+		//ImGui::PopStyleColor();
 
 	}
 
@@ -434,16 +494,19 @@ namespace UI
 	}
 
 
-	void ConfigureUI(size_t currentselectedobj ,UIdataPack &data , scene &scene , std::vector<std::string>& logs ,GLuint import_shader , glm::vec4 lightcolor , glm::vec3 lightpos , GLFWwindow* window , std::vector<uint> &auto_rotate_on , GLuint screen_image,GLuint light_shader)
+	void ConfigureUI(size_t currentselectedobj ,UIdataPack &data , scene &scene , std::vector<std::string>& logs ,GLuint import_shader , glm::vec4 lightcolor , glm::vec3 lightpos , GLFWwindow* window , std::vector<uint> &auto_rotate_on , GLuint screen_image,GLuint light_shader, int currentselectedlight)
 	{
 
 		static bool importmodel_menu = false;
+		static bool ApplicationMenuEnabled = false;
 
+		//current_color_sheme(DARK_THEME);
 		
 
 		//DrawFrameBuffer(screen_image,window);
 
-		
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
+
 
         if (ImGui::BeginMainMenuBar())
         {
@@ -615,11 +678,147 @@ namespace UI
 
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("About"))
+			{
+				if (ImGui::MenuItem("Application Settings", "Ctrl+A+S"))
+				{
+
+					ApplicationMenuEnabled = true;
+					
+				}
+
+
+				ImGui::EndMenu();
+			}
 
             // Add additional menus here
 
             ImGui::EndMainMenuBar();
         }
+
+		ImGui::PopStyleColor();
+
+		if (ApplicationMenuEnabled)
+		{
+			vec2<int> win_size = { NULL,NULL };
+
+			glfwGetWindowSize(window, &win_size.x, &win_size.y);
+
+			ApplicationSettingSizes = { win_size.x / 2.0f , win_size.y / 2.0f };
+			ImVec2 ApplicationSettingPosition = ImVec2((win_size.x / 2) - (ApplicationSettingSizes.x / 2), (win_size.y / 2) - (ApplicationSettingSizes.y / 2));
+
+			ImGui::SetNextWindowSize(ImVec2(ApplicationSettingSizes.x, ApplicationSettingSizes.y));
+			ImGui::SetNextWindowPos(ApplicationSettingPosition , ImGuiCond_FirstUseEver);
+
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
+
+			ImGui::Begin("Application Settings", &ApplicationMenuEnabled, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse);
+
+			ApplicationSettingPosition = ImGui::GetWindowPos();
+
+			ImVec2 Max = ImVec2(ApplicationSettingPosition.x + (ApplicationSettingSizes.x ) , ApplicationSettingPosition.y + (ApplicationSettingSizes.y ));
+			ImVec2 Min = ImVec2(ApplicationSettingPosition.x - (ApplicationSettingSizes.x ), ApplicationSettingPosition.y - (ApplicationSettingSizes.y ));
+
+			//std::cout << "MAX WINDOW: " << Max.x << " "<<Max.y << "Hovered: "<< ImGui::IsMouseHoveringRect(Min, Max) << "\n";
+			//std::cout << "MIN WINDOW: " << Min.x << " " << Min.y << "Hovered: " << ImGui::IsMouseHoveringRect(Min, Max) << "\n";
+
+			if (!ImGui::IsMouseHoveringRect(Min, Max) && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+			{
+				
+				ApplicationMenuEnabled = false;
+				
+			}
+
+			static bool showDropdown = false; 
+
+			
+			
+			if (ImGui::BeginCombo("Set Application Color Theme", "Select an option", ImGuiComboFlags_NoPreview))
+			{
+				
+				if (ImGui::Selectable("DARK THEME"))
+				{
+					
+					chosen_color_sheme = DARK_THEME;
+					
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("LIGHT THEME"))
+				{
+					
+					chosen_color_sheme = LIGHT_THEME;
+					
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("BLUE THEME"))
+				{
+					
+					chosen_color_sheme = BLUE_THEME;
+					
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("CUSTOM THEME"))
+				{
+					
+					chosen_color_sheme = CUSTOM_THEME;
+					
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("PINK THEME"))
+				{
+					
+					chosen_color_sheme = PINK_THEME;
+					
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("CYAN THEME"))
+				{
+					chosen_color_sheme = CYAN_THEME;
+					showDropdown = false; 
+				}
+				if (ImGui::Selectable("ORANGE THEME"))
+				{
+					chosen_color_sheme = ORANGE_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("GREEN THEME"))
+				{
+					chosen_color_sheme = GREEN_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("NORDIC THEME"))
+				{
+					chosen_color_sheme = NORDIC_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("GITHUB STYLED THEME"))
+				{
+					chosen_color_sheme = GITHUB_STYLE_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("INTELLIJ STYLED THEME"))
+				{
+					chosen_color_sheme = INTELLIJ_STYLE_THEME;
+					showDropdown = false;
+				}
+
+				
+				ImGui::EndCombo();
+			}
+
+			
+			if (!ImGui::IsPopupOpen("##Dropdown"))
+			{
+				showDropdown = false;
+			}
+		    
+
+
+
+			ImGui::End();
+
+			ImGui::PopStyleColor();
+		}
 
 
 
@@ -650,7 +849,9 @@ namespace UI
 					ImGui::SetCursorPos(ImVec2(current_win_size.x / 18, current_win_size.y / 20 + (current_win_size.y / 12)));
 
 
-					ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(45 / 255.0, 55 / 255.0, 71 / 255.0, 28 / 255.0)));
+					//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(45 / 255.0, 55 / 255.0, 71 / 255.0, 28 / 255.0)));
+
+					ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
 
 					ImGui::BeginChildFrame(66, ImVec2(current_win_size.x / 1.1f, current_win_size.y / 1.3f), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -658,11 +859,13 @@ namespace UI
 
 
 
-					ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+					//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+					//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MenuBackgroundColor));
+					ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
 					ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 40.0f);
 					ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 3.0f);
 
-					if (ImGui::CollapsingHeader("General Settings", ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Framed))
+					if (ImGui::CollapsingHeader("Model General Settings", ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Framed))
 					{
 						ImGui::BeginChildFrame(3, ImVec2(380, 150), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -972,6 +1175,104 @@ namespace UI
 				// }
 
 			}
+			else if (scene.CURRENT_LIGHT(currentselectedlight) >= NULL)
+			{
+
+				ImGui::BeginGroup();
+
+
+				static float f = 0.0f;
+				static int counter = 0;
+				static bool importmodel = false;
+
+				ImGui::SetCursorPos(ImVec2(current_win_size.x / 18, current_win_size.y / 20 + (current_win_size.y / 12)));
+
+
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(45 / 255.0, 55 / 255.0, 71 / 255.0, 28 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MenuBackgroundColor));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
+
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
+
+				ImGui::BeginChildFrame(66, ImVec2(current_win_size.x / 1.1f, current_win_size.y / 1.3f), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
+
+				ImGui::PopStyleColor();
+				//ImGui::PushStyleColor(ImGuiCol_Header | , ImGui::ColorConvertFloat4ToU32(ImVec4(80 / 255.0, 40 / 255.0, 250 / 255.0, 98 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.2f, 0.2f, 1.0f)); // Set the background color of the header
+				//ImGui::PushStyleVar(Imguistylevarbackground, ImVec2(0, 0)); // Set the background color of what's under the header to be the same as the window
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
+
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 40.0f);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 3.0f);
+
+				if (ImGui::CollapsingHeader("Light General Settings", ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Framed))
+				{
+					ImGui::BeginChildFrame(33, ImVec2(380, 150), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
+
+					//ImGui::SetCursorPos(ImVec2(10, 40));
+					ImGui::ColorEdit3("Background color", (float*)&data.clear_color); // Edit 3 floats representing a color
+					//ImGui::SetCursorPos(ImVec2(10, 70));
+					ImGui::Text("Selected Object: %d", currentselectedobj);
+					//ImGui::SetCursorPos(ImVec2(10, 100));
+					ImGui::Text("Current existing object count: %d", scene.GetModelCount());
+					//ImGui::SetCursorPos(ImVec2(10, 130));
+					if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+						counter++;
+					ImGui::SameLine();
+					ImGui::Text("counter = %d", counter);
+
+					ImGui::EndChildFrame();
+
+				}
+				
+				if (ImGui::CollapsingHeader("Input manuel", ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Framed))
+				{
+					ImGui::BeginChildFrame(7, ImVec2(380, 150), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
+
+					//ImGui::SetCursorPos(ImVec2(10, 160));
+					ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+					//ImGui::SetCursorPos(ImVec2(10, 190));
+					ImGui::Text("Rotate the camera: Middle mouse button");
+					//ImGui::SetCursorPos(ImVec2(10, 205));
+					ImGui::Text("Move the camera: W,A,S,D keys");
+					//ImGui::SetCursorPos(ImVec2(10, 220));
+					ImGui::Text("Faster browsing: Left shift key");
+					//ImGui::SetCursorPos(ImVec2(10, 235));
+					ImGui::Text("Go up and down: Space and right ctrl keys");
+					//ImGui::SetCursorPos(ImVec2(10, 250));
+					ImGui::Text("Delete object: Delete key");
+					//ImGui::SetCursorPos(ImVec2(10, 265));
+					ImGui::Text("Duplicate object: Left ctrl + D keys");
+
+					ImGui::EndChildFrame();
+
+				}
+
+				if (ImGui::CollapsingHeader("Light Settings", ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Framed))
+				{
+					ImGui::BeginChildFrame(7, ImVec2(380, 150), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
+
+
+
+
+
+					ImGui::EndChildFrame();
+				}
+
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar();
+				ImGui::PopStyleVar();
+
+
+				ImGui::EndChildFrame();
+
+				ImGui::PopStyleColor();
+
+				ImGui::EndGroup();
+
+
+			}
 			else
 			{
 				ImGui::BeginGroup();
@@ -984,14 +1285,19 @@ namespace UI
 				ImGui::SetCursorPos(ImVec2(current_win_size.x / 18, current_win_size.y / 20 + (current_win_size.y / 12)));
 
 
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(45 / 255.0, 55 / 255.0, 71 / 255.0, 28 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(45 / 255.0, 55 / 255.0, 71 / 255.0, 28 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
+
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
+
 				ImGui::BeginChildFrame(66, ImVec2(current_win_size.x / 1.1f, current_win_size.y / 1.3f), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
 
 				ImGui::PopStyleColor();
 				//ImGui::PushStyleColor(ImGuiCol_Header | , ImGui::ColorConvertFloat4ToU32(ImVec4(80 / 255.0, 40 / 255.0, 250 / 255.0, 98 / 255.0)));
 				//ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.2f, 0.2f, 1.0f)); // Set the background color of the header
 				//ImGui::PushStyleVar(Imguistylevarbackground, ImVec2(0, 0)); // Set the background color of what's under the header to be the same as the window
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
 				ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 40.0f);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 3.0f);
 
@@ -1001,6 +1307,9 @@ namespace UI
 
 					//ImGui::SetCursorPos(ImVec2(10, 10));
 					ImGui::Checkbox(" Enable Skybox", &data.render_cube_map);
+
+					ImGui::Checkbox("Show light meshes", &data.renderlights);
+
 					//ImGui::SetCursorPos(ImVec2(10, 40));
 					ImGui::ColorEdit3("Background color", (float*)&data.clear_color); // Edit 3 floats representing a color
 					//ImGui::SetCursorPos(ImVec2(10, 70));
@@ -1024,7 +1333,8 @@ namespace UI
 				ImGui::PopStyleVar();
 
 
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+				//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(72 / 255.0, 89 / 255.0, 115 / 255.0, 45 / 255.0)));
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
 				ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 40.0f);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 3.0f);
 
@@ -1214,7 +1524,10 @@ namespace UI
 			ImGui::SetCursorPos(ImVec2(current_win_size.x / 18, current_win_size.y / 20 + (current_win_size.y / 12)));
 
 
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(150 / 255.0, 188 / 255.0, 250 / 255.0, 98 / 255.0)));
+			//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(ImVec4(150 / 255.0, 188 / 255.0, 250 / 255.0, 98 / 255.0)));
+			//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.ChildMenuColor));
+
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::ColorConvertFloat4ToU32(current_color_sheme.MidMenuColor));
 			ImGui::BeginChildFrame(88, ImVec2(current_win_size.x / 1.1f, current_win_size.y / 1.3f), ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_AlwaysAutoResize);
 
 			ImGui::Text("THIS IS LOG TAB");

@@ -75,7 +75,7 @@ int main()
     CubeMap Cubemap(cube_map_faces, "CubeMap.vert", "CubeMap.frag");
 
 
-    //glEnable(GL_FRAMEBUFFER_SRGB);
+    
 
     // Enables Cull Facing
     //glEnable(GL_CULL_FACE);
@@ -112,17 +112,13 @@ int main()
 
     scene.Addlight(lightpos, glm::vec3(2.0f, 2.0f, 2.0f), lightcolor, lightshader.GetID(), CUBE_LIGHT, DIRECTIONAL_LIGHT);
     scene.Addlight(lightpos2, glm::vec3(1.0f, 1.0f, 1.0f), lightcolor2, lightshader.GetID(), CUBE_LIGHT, SPOT_LIGHT);
-    //scene.Addlight(-glm::vec3(0.5f, 0.9f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f), lightcolor, lightshader.GetID(), CUBE_LIGHT,DIRECTIONAL_LIGHT);
-    //scene.Addlight(lightpos3, glm::vec3(1.0f, 1.0f, 1.0f), lightcolor3, lightshader.GetID(), CUBE_LIGHT, POINT_LIGHT);
-
-
+   
     for (size_t i = 0; i < scene.GetModelCount(); i++)
     {
         scene.GetModel(i)->transformation.scale(glm::vec3(0.05f, 0.05f, 0.05f));
     }
    
     
-
     scene.handlelights(defaultshader.GetID());
 
     UseShaderProgram(defaultshader.GetID());
@@ -163,11 +159,11 @@ int main()
 
     float time = NULL;
 
-    
+    UI::UIdataPack data;
 
     UI::InitNewUIwindow();
 
-    UI::SetStyle();
+    UI::SetStyle(data);
     
     UI::SetPlatformBackEnd("#version 130", window);
 
@@ -176,7 +172,7 @@ int main()
     Model* selected_model = nullptr;
     int  selectedobjlock = NULL;
 
-    UI::UIdataPack data;
+   
 
 
 
@@ -201,6 +197,8 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
                
+        UI::SetStyle(data);
+
         WindowSizeRecall(window,UI::current_viewport_size);
 
         UI::FindCurrentViewportSize(window);
@@ -226,7 +224,7 @@ int main()
         std::cout << "CURRENT SELECTED OBJECT: " << currentselectedobj << "\n";
        
 
-        UI::ConfigureUI(currentselectedobj, data, scene, logs, defaultshader.GetID(), lightcolor, lightpos,window,auto_rotate_on , ShadowMap.GetShadowMapImage(),lightshader.GetID());
+        UI::ConfigureUI(currentselectedobj, data, scene, logs, defaultshader.GetID(), lightcolor, lightpos,window,auto_rotate_on , ShadowMap.GetShadowMapImage(),lightshader.GetID(),currentselectedlight);
 
         //UI::DemoUI(window);
 
@@ -367,7 +365,9 @@ int main()
             glEnable(GL_DEPTH_TEST);
         }
         
+        
 
+       
         
         //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);

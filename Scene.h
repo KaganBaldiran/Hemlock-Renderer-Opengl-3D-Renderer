@@ -207,7 +207,7 @@ public:
 
 		//this->globalscale = globalScale;
 
-		for (size_t i = 0; i < models.size(); i++)
+		for (size_t i = 0; i < lights.size(); i++)
 		{
 			lights.at(i)->transformation.scale_avg = (lights.at(i)->transformation.ObjectScales.x + lights.at(i)->transformation.ObjectScales.y + lights.at(i)->transformation.ObjectScales.z) / 3;
 			lights.at(i)->transformation.dynamic_scale_avg = lights.at(i)->transformation.scale_avg;
@@ -217,7 +217,7 @@ public:
 			lights.at(i)->transformation.ObjectScales.z = lights.at(i)->transformation.ObjectScales.z;
 
 
-			std::cout << "Model width: " << lights.at(i)->transformation.ObjectScales.x << " Model height: " << lights.at(i)->transformation.ObjectScales.y << " Model Depth: " << lights.at(i)->transformation.ObjectScales.z << "\n";
+			std::cout << "Light width: " << lights.at(i)->transformation.ObjectScales.x << " Light height: " << lights.at(i)->transformation.ObjectScales.y << " Light Depth: " << lights.at(i)->transformation.ObjectScales.z << "\n";
 			std::cout << "Scale avg: " << lights.at(i)->transformation.scale_avg << "\n";
 
 		}
