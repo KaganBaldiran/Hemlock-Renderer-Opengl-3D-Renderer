@@ -16,6 +16,7 @@
 #include "Texture.h"
 #include <tuple>
 
+
 typedef std::tuple<ImVec4, ImVec4, ImVec4 , ImVec4, ImVec4 , ImVec4> color_sheme_t;
 // Dark theme color values
 #define DARK_THEME color_sheme_t(ImVec4(0.1f, 0.1f, 0.1f, 1.0f), ImVec4(0.2f, 0.2f, 0.2f, 1.0f), ImVec4(0.25f, 0.25f, 0.25f, 1.0f), ImVec4(0.4f, 0.4f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f),ImVec4(0.041f, 0.041f, 0.044f, 0.00f))
@@ -28,7 +29,13 @@ typedef std::tuple<ImVec4, ImVec4, ImVec4 , ImVec4, ImVec4 , ImVec4> color_sheme
 #define GREEN_THEME color_sheme_t(ImVec4(0.1f, 0.3f, 0.1f, 1.0f), ImVec4(0.2f, 0.5f, 0.2f, 1.0f), ImVec4(0.25f, 0.6f, 0.25f, 1.0f), ImVec4(0.4f, 0.7f, 0.4f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
 #define NORDIC_THEME color_sheme_t(ImVec4(0.05f, 0.05f, 0.05f, 1.0f), ImVec4(0.16f, 0.23f, 0.24f, 1.0f), ImVec4(0.20f, 0.29f, 0.30f, 1.0f), ImVec4(0.26f, 0.35f, 0.36f, 1.0f), ImVec4(0.85f, 0.85f, 0.85f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
 #define GITHUB_STYLE_THEME color_sheme_t(ImVec4(0.13f, 0.17f, 0.23f, 1.0f), ImVec4(0.18f, 0.22f, 0.28f, 1.0f), ImVec4(0.22f, 0.26f, 0.32f, 1.0f), ImVec4(0.28f, 0.32f, 0.38f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
-#define INTELLIJ_STYLE_THEME color_sheme_t(ImVec4(0.0f, 0.0f, 0.0f, 1.0f), ImVec4(0.25f, 0.25f, 0.25f, 1.0f), ImVec4(0.35f, 0.35f, 0.35f, 1.0f), ImVec4(0.45f, 0.45f, 0.45f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.0f, 0.0f, 0.0f, 0.0f))
+#define INTELLIJ_STYLE_THEME color_sheme_t(ImVec4(0.95f, 0.95f, 0.95f, 1.0f), ImVec4(0.25f, 0.27f, 0.30f, 1.0f), ImVec4(0.2f, 0.22f, 0.25f, 1.0f), ImVec4(0.12f, 0.14f, 0.17f, 1.0f), ImVec4(0.38f, 0.40f, 0.43f, 1.0f), ImVec4(0.6f, 0.63f, 0.66f, 1.0f))
+#define CHATGPT_LIGHT_THEME color_sheme_t(ImVec4(0.95f, 0.95f, 0.95f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(0.9f, 0.9f, 0.9f, 1.0f), ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.2f, 0.2f, 0.2f, 1.0f), ImVec4(0.1f, 0.1f, 0.1f, 1.0f))
+#define SUNSET_THEME color_sheme_t(ImVec4(0.95f, 0.85f, 0.80f, 1.0f), ImVec4(0.54f, 0.29f, 0.31f, 1.0f), ImVec4(0.45f, 0.22f, 0.25f, 1.0f), ImVec4(0.35f, 0.16f, 0.20f, 1.0f), ImVec4(0.68f, 0.41f, 0.31f, 1.0f), ImVec4(0.89f, 0.56f, 0.41f, 1.0f))
+#define OCEANIC_THEME color_sheme_t(ImVec4(0.15f, 0.20f, 0.25f, 1.0f), ImVec4(0.23f, 0.35f, 0.42f, 1.0f), ImVec4(0.19f, 0.28f, 0.35f, 1.0f), ImVec4(0.16f, 0.22f, 0.28f, 1.0f), ImVec4(0.37f, 0.54f, 0.63f, 1.0f), ImVec4(0.48f, 0.71f, 0.84f, 1.0f))
+#define VINTAGE_THEME color_sheme_t(ImVec4(0.95f, 0.92f, 0.82f, 1.0f), ImVec4(0.51f, 0.39f, 0.31f, 1.0f), ImVec4(0.42f, 0.32f, 0.25f, 1.0f), ImVec4(0.35f, 0.26f, 0.20f, 1.0f), ImVec4(0.66f, 0.50f, 0.40f, 1.0f), ImVec4(0.82f, 0.64f, 0.51f, 1.0f))
+#define MINTY_FRESH_THEME color_sheme_t(ImVec4(0.87f, 0.98f, 0.93f, 1.0f), ImVec4(0.21f, 0.55f, 0.40f, 1.0f), ImVec4(0.17f, 0.46f, 0.33f, 1.0f), ImVec4(0.13f, 0.36f, 0.26f, 1.0f), ImVec4(0.31f, 0.73f, 0.56f, 1.0f), ImVec4(0.48f, 0.85f, 0.65f, 1.0f))
+#define ROYAL_PURPLE_THEME color_sheme_t(ImVec4(0.85f, 0.80f, 0.95f, 1.0f), ImVec4(0.37f, 0.20f, 0.54f, 1.0f), ImVec4(0.31f, 0.22f, 0.45f, 1.0f), ImVec4(0.25f, 0.16f, 0.35f, 1.0f), ImVec4(0.47f, 0.41f, 0.68f, 1.0f), ImVec4(0.61f, 0.56f, 0.89f, 1.0f))
 
 
 namespace UI
@@ -123,6 +130,7 @@ namespace UI
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init(version);
+
 	}
 
 	void CreateNewFrame()
@@ -801,7 +809,37 @@ namespace UI
 					chosen_color_sheme = INTELLIJ_STYLE_THEME;
 					showDropdown = false;
 				}
-
+				if (ImGui::Selectable("CHATGPT LIGHT MODE STYLED THEME"))
+				{
+					chosen_color_sheme = CHATGPT_LIGHT_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("SUNSET THEME"))
+				{
+					chosen_color_sheme = SUNSET_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("OCEANIC THEME"))
+				{
+					chosen_color_sheme = OCEANIC_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("VINTAGE THEME"))
+				{
+					chosen_color_sheme = VINTAGE_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("MINTY FRESH THEME"))
+				{
+					chosen_color_sheme = MINTY_FRESH_THEME;
+					showDropdown = false;
+				}
+				if (ImGui::Selectable("ROYAL PURPLE THEME"))
+				{
+					chosen_color_sheme = ROYAL_PURPLE_THEME;
+					showDropdown = false;
+				}
+				
 				
 				ImGui::EndCombo();
 			}
